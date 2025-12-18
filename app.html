@@ -3,190 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPICKS OS | THE ULTIMATE PREDICTOR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <title>ALPICKS OS | QUANTUM PREDICTOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --bg-master: #0a0b10;
-            --card-fs: #16181f;
-            --accent: #00ff88;
-            --warning: #ffcc00;
-            --danger: #ff4d4d;
+            --bg: #050508;
+            --card: #12131a;
+            --neon: #00ff88;
+            --gold: #ffcc00;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { background: var(--bg-master); color: #fff; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* HEADER HIBRIDO (Lujo + Datos) */
+        /* NOTIFICACIONES DE DOPAMINA (FAKE LIVE) */
+        #notification-toast {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 350px; background: rgba(0, 255, 136, 0.95);
+            color: black; padding: 12px; border-radius: 15px; font-size: 0.75rem;
+            font-weight: 800; z-index: 5000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,255,136,0.4);
+        }
+
+        /* HEADER */
         header {
-            background: #000; padding: 20px; border-bottom: 2px solid var(--accent);
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,255,136,0.15);
+            padding: 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass); display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
         }
-        .brand { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 900; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-        .live-status { font-size: 0.65rem; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid #333; }
-        .dot { color: var(--danger); animation: blink 1s infinite; }
+        .logo { font-family: 'Orbitron'; font-size: 1.3rem; color: var(--gold); text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); }
 
-        .app-container { max-width: 500px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
+        .app-shell { padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
 
-        /* LISTA TIPO FLASHSCORE PRO */
-        .category { font-size: 0.7rem; font-weight: 900; color: #666; text-transform: uppercase; margin: 15px 0 10px 5px; display: flex; align-items: center; gap: 8px; }
+        /* RADAR SCANNER */
+        .scanner-box {
+            background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid var(--glass); position: relative; overflow: hidden;
+        }
+        .scanner-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--neon); box-shadow: 0 0 15px var(--neon);
+            animation: scan 3s linear infinite; opacity: 0.5;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* MATCH CARD (FLASHCORE STYLE) */
+        .match {
+            background: #1a1b23; border-radius: 15px; padding: 18px; margin-bottom: 12px;
+            display: grid; grid-template-columns: 1fr 80px; align-items: center;
+            border: 1px solid transparent; transition: 0.3s;
+        }
+        .match.active-pick { border-color: var(--neon); background: linear-gradient(145deg, #1a1b23, #0a0a0f); }
         
-        .game-row {
-            background: var(--card-fs); border-radius: 16px; padding: 20px; margin-bottom: 12px;
-            border-left: 4px solid transparent; transition: 0.3s; position: relative;
-            overflow: hidden;
+        .teams { display: flex; flex-direction: column; gap: 8px; }
+        .team-row { display: flex; align-items: center; gap: 12px; }
+        .team-row img { width: 22px; height: 22px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.1)); }
+        .team-row span { font-size: 0.9rem; font-weight: 700; letter-spacing: -0.5px; }
+
+        .odds-btn {
+            background: var(--gold); color: black; border: none; padding: 10px;
+            border-radius: 8px; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: 900;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2);
         }
-        .game-row.vip { border-left-color: var(--warning); background: linear-gradient(90deg, #16181f 0%, #1c1f26 100%); }
 
-        .game-meta { display: flex; justify-content: space-between; font-size: 0.65rem; color: #888; margin-bottom: 12px; }
-        .game-main { display: flex; align-items: center; justify-content: space-between; }
-        
-        .teams-v { width: 60%; }
-        .t-line { display: flex; align-items: center; gap: 12px; margin: 6px 0; }
-        .t-line img { width: 24px; height: 24px; object-fit: contain; }
-        .t-line span { font-weight: 700; font-size: 0.95rem; }
-
-        /* ACCIÓN (365SCORES STYLE) */
-        .predict-action { width: 35%; text-align: right; }
-        .btn-action {
-            padding: 10px 15px; border-radius: 10px; border: none; font-family: 'Orbitron';
-            font-size: 0.65rem; font-weight: 900; cursor: pointer; transition: 0.3s; width: 100%;
+        /* TICKET FÍSICO DIGITAL */
+        #ticket-result {
+            display: none; margin-top: 20px; background: white; color: black;
+            border-radius: 4px; padding: 20px; position: relative;
+            animation: popIn 0.5s cubic-bezier(0.26, 1.36, 0.4, 1.29);
         }
-        .btn-locked { background: #222; color: #555; }
-        .btn-premium { background: var(--warning); color: #000; box-shadow: 0 4px 15px rgba(255,204,0,0.2); }
-
-        /* TICKET VIP (REVELACIÓN) */
-        .ticket-reveal {
-            display: none; margin-top: 15px; border-top: 1px dashed #444; padding-top: 15px;
-            animation: slideDown 0.4s ease forwards;
+        #ticket-result::before {
+            content: ''; position: absolute; top: -10px; left: 0; width: 100%; height: 20px;
+            background-image: radial-gradient(circle, transparent 70%, white 70%);
+            background-size: 20px 20px; background-position: 0 -10px;
         }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .ticket-header { border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; text-align: center; }
 
-        .ticket-box {
-            background: #000; border: 1px solid var(--accent); border-radius: 12px; padding: 15px;
-            text-align: center; position: relative;
-        }
-        .ticket-box::before, .ticket-box::after { content: ''; position: absolute; width: 20px; height: 20px; background: var(--card-fs); border-radius: 50%; top: 50%; margin-top: -10px; }
-        .ticket-box::before { left: -11px; } .ticket-box::after { right: -11px; }
-
-        /* BOTTOM NAV DOCK */
+        /* FOOTER DOCK */
         .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background: rgba(22,24,31,0.9);
-            backdrop-filter: blur(15px); border-radius: 25px; padding: 15px;
-            display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: fixed; bottom: 0; width: 100%; background: #000;
+            padding: 20px; display: flex; justify-content: space-around;
+            border-top: 1px solid var(--glass); z-index: 2000;
         }
-        .dock-item { color: #555; font-size: 1.2rem; }
-        .dock-item.active { color: var(--accent); }
+        .dock i { font-size: 1.3rem; color: #444; }
+        .dock i.active { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
 
         /* MODAL */
         .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none; z-index: 2000;
-            align-items: center; justify-content: center; padding: 20px;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px;
         }
-        .m-card { background: var(--card-fs); padding: 30px; border-radius: 25px; border: 1px solid var(--warning); width: 100%; max-width: 350px; text-align: center; }
-
-        @keyframes blink { 50% { opacity: 0.3; } }
+        .modal-content {
+            background: var(--card); padding: 30px; border-radius: 25px; text-align: center;
+            border: 1px solid var(--neon); width: 100%; max-width: 400px;
+        }
     </style>
 </head>
 <body>
 
+<div id="notification-toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-msg">Juan acaba de ganar $450.000 con el Pick VIP</span>
+</div>
+
 <header>
-    <div class="brand">ALPICKS <span style="font-size: 0.7rem; vertical-align: middle; color: #fff; opacity: 0.5;">OS</span></div>
-    <div class="live-status"><i class="fas fa-circle dot"></i> ENGINE v4.2 LIVE</div>
+    <div class="logo">ALPICKS OS</div>
+    <div style="font-size: 0.7rem; color: var(--neon); font-weight: 900;">
+        <i class="fas fa-microchip"></i> IA ACTIVE
+    </div>
 </header>
 
-<div class="app-container">
-
-    <div class="category"><i class="fas fa-bolt"></i> Sugerencia de la IA</div>
+<div class="app-shell">
     
-    <div class="game-row vip">
-        <div class="game-meta">
-            <span>COPA ITALIA • 14:00</span>
-            <span style="color: var(--warning); font-weight: bold;">ALTA CONFIANZA</span>
-        </div>
-        <div class="game-main">
-            <div class="teams-v">
-                <div class="t-line">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png">
-                    <span>Napoli</span>
-                </div>
-                <div class="t-line">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png">
-                    <span>Milan</span>
-                </div>
+    <div class="scanner-box">
+        <div class="scanner-line"></div>
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h4 style="font-family: 'Orbitron'; font-size: 0.8rem; color: var(--neon);">PROCESANDO JORNADA</h4>
+                <p style="font-size: 0.6rem; opacity: 0.5;">Analizando 1,420 variables de mercado...</p>
             </div>
-            <div class="predict-action">
-                <button class="btn-action btn-premium" onclick="openGate()">DESBLOQUEAR</button>
-            </div>
-        </div>
-        
-        <div id="vip-ticket" class="ticket-reveal">
-            <div class="ticket-box">
-                <p style="font-size: 0.6rem; color: #666; margin-bottom: 5px;">TICKET ID: #99281</p>
-                <h4 style="color: var(--accent); font-family: 'Orbitron';">GANA NAPOLI & +1.5</h4>
-                <div style="font-size: 0.7rem; margin-top: 10px; color: #888;">CUOTA: 1.88 | PROB: 94.8%</div>
-            </div>
+            <i class="fas fa-satellite-dish" style="color: var(--neon); font-size: 1.5rem;"></i>
         </div>
     </div>
 
-    <div class="category"><i class="fas fa-list-ul"></i> Mercado General</div>
-
-    <div class="game-row">
-        <div class="game-meta"><span>PREMIER LEAGUE • 15:30</span><span>ANALIZANDO</span></div>
-        <div class="game-main">
-            <div class="teams-v">
-                <div class="t-line"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png"><span>Chelsea</span></div>
-                <div class="t-line"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png"><span>Man Utd</span></div>
+    <div class="match active-pick">
+        <div class="teams">
+            <div class="team-row">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png">
+                <span>Napoli</span>
             </div>
-            <div class="predict-action"><button class="btn-action btn-locked" disabled>LOCK</button></div>
+            <div class="team-row">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png">
+                <span>Milan</span>
+            </div>
+        </div>
+        <div class="odds-btn" onclick="showPay()">UNLOCK</div>
+    </div>
+
+    <div id="ticket-result">
+        <div class="ticket-header">
+            <h3 style="font-family: 'Orbitron'; font-size: 0.9rem;">CONFIRMED PICK</h3>
+        </div>
+        <p style="font-size: 0.7rem; color: #666;">EVENTO: COPA ITALIA</p>
+        <h2 style="margin: 10px 0; font-weight: 900; color: #000;">NAPOLI GANA O EMPATA & +1.5</h2>
+        <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #eee; pt: 10px;">
+            <span>CUOTA: 1.88</span>
+            <span>EFECTIVIDAD: 94%</span>
         </div>
     </div>
 
+</div>
+
+<div id="payModal" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-lock-open" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 20px;"></i>
+        <h2 style="font-family: 'Orbitron'; margin-bottom: 10px;">ACCESO VIP</h2>
+        <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 25px;">Obtén el análisis completo y el ticket de apuesta para este encuentro.</p>
+        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="odds-btn" style="display: block; text-decoration: none; padding: 18px; font-size: 1rem;">COMPRAR AHORA ($12k)</a>
+        <p onclick="showVipInput()" style="margin-top: 20px; font-size: 0.7rem; text-decoration: underline; cursor: pointer;">Ya tengo un código</p>
+    </div>
 </div>
 
 <div class="dock">
-    <div class="dock-item active"><i class="fas fa-home"></i></div>
-    <div class="dock-item"><i class="fas fa-chart-line"></i></div>
-    <div class="dock-item" onclick="document.getElementById('m-code').style.display='flex'"><i class="fas fa-key"></i></div>
-    <div class="dock-item"><i class="fas fa-user"></i></div>
-</div>
-
-<div id="m-pay" class="modal">
-    <div class="m-card">
-        <i class="fas fa-crown" style="font-size: 2rem; color: var(--warning);"></i>
-        <h2 style="font-family:'Orbitron'; margin: 15px 0;">SISTEMA VIP</h2>
-        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 25px;">Accede al pronóstico de alta precisión generado por la IA de Alpicks.</p>
-        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-action btn-premium" style="display: block; text-decoration: none; padding: 18px;">PAGAR $12.000 COP</a>
-        <p onclick="this.parentElement.parentElement.style.display='none'" style="margin-top: 20px; font-size: 0.7rem; cursor: pointer; opacity: 0.5;">CERRAR VENTANA</p>
-    </div>
-</div>
-
-<div id="m-code" class="modal">
-    <div class="m-card" style="border-color: var(--accent);">
-        <h3 style="font-family:'Orbitron'; margin-bottom: 15px;">VALIDAR ACCESO</h3>
-        <input type="text" id="vCode" placeholder="CÓDIGO VIP" style="width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; text-align: center; border-radius: 12px; font-family: 'Orbitron';">
-        <button onclick="valCode()" style="width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 12px; margin-top: 15px; font-weight: 900;">ACTIVAR</button>
-    </div>
+    <i class="fas fa-futbol active"></i>
+    <i class="fas fa-star"></i>
+    <i class="fas fa-chart-pie"></i>
+    <i class="fas fa-user-astronaut"></i>
 </div>
 
 <script>
-    function openGate() { document.getElementById('m-pay').style.display = 'flex'; }
+    // Sistema de Notificaciones de Dopamina
+    const names = ["Andrés", "Camilo", "Danna", "Mateo", "PicksCol"];
+    const amounts = ["$120.000", "$450.000", "$80.000", "$1.200.000"];
     
-    function valCode() {
-        if(document.getElementById('vCode').value.toUpperCase() === "VIP777") {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.8 } });
-            document.getElementById('m-code').style.display = 'none';
-            document.getElementById('vip-ticket').style.display = 'block';
-            document.querySelector('.btn-premium').innerText = "DESBLOQUEADO";
-            document.querySelector('.btn-premium').style.background = "#00ff88";
-        } else {
-            alert("Acceso denegado. Código inválido.");
+    function showToast() {
+        const toast = document.getElementById('notification-toast');
+        const name = names[Math.floor(Math.random()*names.length)];
+        const amount = amounts[Math.floor(Math.random()*amounts.length)];
+        document.getElementById('toast-msg').innerText = `${name} acaba de ganar ${amount} con ALPICKS`;
+        toast.style.top = "20px";
+        setTimeout(() => { toast.style.top = "-100px"; }, 4000);
+    }
+    setInterval(showToast, 8000);
+
+    function showPay() { document.getElementById('payModal').style.display = 'flex'; }
+
+    function showVipInput() {
+        const code = prompt("INGRESA TU CÓDIGO VIP DE 6 DÍGITOS:");
+        if(code && code.toUpperCase() === "VIP777") {
+            document.getElementById('payModal').style.display = 'none';
+            confetti({ particleCount: 250, spread: 80, origin: { y: 0.7 } });
+            document.getElementById('ticket-result').style.display = 'block';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     }
 </script>
