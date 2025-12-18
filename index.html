@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ALPICKS | OFICIAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body { background: #020205; color: white; font-family: 'Montserrat', sans-serif; margin: 0; text-align: center; }
+        header { padding: 20px; border-bottom: 1px solid #00ff88; background: #0a0a0f; }
+        .logo { font-family: 'Orbitron'; color: #ffcc00; font-size: 1.5rem; letter-spacing: 3px; }
+        .card { background: #101018; margin: 20px; padding: 25px; border-radius: 20px; border: 1px solid #222; }
+        .btn { display: block; background: #ffcc00; color: black; padding: 18px; margin: 10px 0; border-radius: 12px; text-decoration: none; font-weight: 900; font-family: 'Orbitron'; font-size: 0.8rem; }
+        .input-code { width: 100%; padding: 15px; margin-top: 10px; border-radius: 10px; border: 1px solid #00d9ff; background: #000; color: white; text-align: center; font-family: 'Orbitron'; display: none; }
+        .result { display: none; margin-top: 15px; padding: 15px; border: 1px solid #00ff88; background: rgba(0,255,136,0.1); color: #00ff88; border-radius: 12px; font-family: 'Orbitron'; }
+    </style>
+</head>
+<body>
+    <header><div class="logo">ALPICKS</div></header>
+    <div class="card">
+        <h2 style="font-family:'Orbitron'; font-size:0.9rem; color:#00ff88;">NAPOLI VS MILAN</h2>
+        <p style="font-size: 0.7rem; opacity: 0.6;">PROBABILIDAD IA: 94%</p>
+        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn">DESBLOQUEAR PICK ($12.000)</a>
+        <button onclick="document.getElementById('c').style.display='block'" style="background:none; border:none; color:white; font-size:0.7rem; text-decoration:underline; cursor:pointer;">YA TENGO MI CÓDIGO</button>
+        <input type="text" id="c" class="input-code" placeholder="CÓDIGO VIP" oninput="check(this.value)">
+        <div id="r" class="result"><strong>PICK: NAPOLI GANA O EMPATA & +1.5 GOLES</strong></div>
+    </div>
+    <script>
+        function check(v){
+            if(v.toUpperCase().trim() === "VIP777"){
+                confetti();
+                document.getElementById('r').style.display='block';
+                document.getElementById('c').style.display='none';
+            }
+        }
+    </script>
+</body>
+</html>
