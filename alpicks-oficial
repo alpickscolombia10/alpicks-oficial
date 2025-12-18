@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ALPICKS | GALAXY PRO MAX ULTRA</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@300;400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --oro-premium: #ffcc00;
+            --verde-neon: #00ff88;
+            --azul-quantum: #00d9ff;
+            --negro-absoluto: #010103;
+            --vidrio-dark: rgba(10, 10, 15, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: var(--negro-absoluto); 
+            color: white; 
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* FONDO DINÁMICO GALAXY ULTRA */
+        .galaxy-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #010103 100%);
+        }
+        
+        .galaxy-bg::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3;
+        }
+
+        .contenedor { 
+            width: 100%; max-width: 450px; margin: 0 auto; padding: 25px 15px; 
+            text-align: center; position: relative;
+        }
+
+        /* LOGO CON AURA DE PODER */
+        .logo-aura {
+            width: 150px; height: 150px; margin: 0 auto 15px;
+            border-radius: 50%; border: 4px solid var(--oro-premium);
+            box-shadow: 0 0 30px var(--oro-premium), inset 0 0 20px var(--oro-premium);
+            animation: pulse-aura 2.5s infinite ease-in-out;
+            object-fit: cover; display: block;
+        }
+
+        @keyframes pulse-aura {
+            0% { transform: scale(1); box-shadow: 0 0 20px var(--oro-premium); }
+            50% { transform: scale(1.08); box-shadow: 0 0 60px var(--oro-premium); }
+            100% { transform: scale(1); box-shadow: 0 0 20px var(--oro-premium); }
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 2.5rem; letter-spacing: 5px; color: var(--oro-premium); text-shadow: 0 0 15px rgba(255,204,0,0.5); }
+        .sub-tag { font-family: 'Orbitron'; color: var(--azul-quantum); font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 30px; display: block; }
+
+        /* TARJETA DE PARTIDO PRO MAX */
+        .card-match {
+            background: var(--vidrio-dark); border: 1px solid var(--azul-quantum);
+            border-radius: 30px; padding: 30px 15px; backdrop-filter: blur(20px);
+            margin-bottom: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            position: relative; overflow: hidden;
+        }
+
+        .card-match::before {
+            content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.1), transparent);
+            animation: sweep 4s infinite;
+        }
+
+        @keyframes sweep { 0% { left: -100%; } 100% { left: 100%; } }
+
+        .duelo { display: flex; justify-content: space-around; align-items: center; }
+        .equipo img { width: 75px; height: 75px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+        .equipo p { font-weight: 900; font-size: 0.75rem; margin-top: 10px; font-family: 'Orbitron'; }
+        .vs { font-family: 'Orbitron'; font-size: 2rem; font-weight: 900; background: linear-gradient(to bottom, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* SISTEMA FOMO ULTRA */
+        .fomo-box {
+            background: rgba(255, 0, 0, 0.1); border: 1px solid #ff4444; padding: 12px;
+            border-radius: 15px; color: #ff4444; font-family: 'Orbitron'; font-size: 0.8rem;
+            margin-bottom: 25px; animation: blink 1s infinite alternate;
+        }
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.5; } }
+
+        /* PRECIO Y BOTÓN GALAXY */
+        .precio-v { font-family: 'Orbitron'; font-size: 3.2rem; font-weight: 900; margin: 10px 0; color: #fff; }
+        
+        .btn-compra {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            width: 100%; padding: 25px; background: white; color: black;
+            text-decoration: none; border-radius: 20px; font-weight: 900;
+            font-size: 1.3rem; font-family: 'Orbitron'; transition: 0.4s;
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.4);
+        }
+        .btn-compra:hover { background: var(--verde-neon); transform: translateY(-5px) scale(1.02); }
+
+        /* ZONA DE DESBLOQUEO */
+        .zona-vip {
+            margin-top: 40px; padding: 30px 20px; background: #000;
+            border-radius: 25px; border: 1px solid #222; box-shadow: inset 0 0 20px rgba(0, 217, 255, 0.1);
+        }
+        .input-ultra {
+            width: 100%; padding: 18px; background: #050505; border: 2px solid var(--azul-quantum);
+            color: white; text-align: center; border-radius: 15px; margin-bottom: 20px;
+            font-family: 'Orbitron'; font-size: 1.5rem; outline: none; transition: 0.3s;
+        }
+        .input-ultra:focus { box-shadow: 0 0 20px var(--azul-quantum); }
+
+        .btn-scan {
+            background: transparent; border: 1px solid white; color: white; padding: 12px;
+            width: 100%; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        .resultado-anim {
+            display: none; margin-top: 25px; padding: 20px; border: 2px solid var(--verde-neon);
+            border-radius: 20px; background: rgba(0,255,136,0.15); animation: zoomIn 0.5s;
+        }
+        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .garantia-ultra {
+            margin-top: 30px; text-align: left; padding: 20px;
+            border-left: 5px solid var(--verde-neon); background: rgba(0, 255, 136, 0.05);
+            border-radius: 0 20px 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="galaxy-bg"></div>
+
+<div class="contenedor">
+    <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg" class="logo-aura">
+    
+    <h1>ALPICKS</h1>
+    <span class="sub-tag">QUANTUM ALGORITHM 2.0</span>
+
+    <div class="card-match">
+        <div class="duelo">
+            <div class="equipo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png">
+                <p>NAPOLI</p>
+            </div>
+            <div class="vs">VS</div>
+            <div class="equipo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png">
+                <p>AC MILAN</p>
+            </div>
+        </div>
+        <div style="margin-top: 20px; font-size: 0.8rem; color: var(--azul-quantum); font-family: 'Orbitron';">
+            18 / DIC / 2025 • 14:00 PM
+        </div>
+    </div>
+
+    <div class="fomo-box">
+        <i class="fas fa-exclamation-triangle"></i> ÚLTIMOS <span id="cupos">9</span> CUPOS DISPONIBLES
+    </div>
+
+    <div style="font-size: 0.9rem; letter-spacing: 1px; opacity: 0.7;">ACCESO ÚNICO POR SOLO</div>
+    <div class="precio-v">$12.000</div>
+
+    <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-compra">
+        <i class="fas fa-bolt"></i> OBTENER PICK VIP
+    </a>
+
+    <div class="zona-vip">
+        <p style="font-size: 0.6rem; color: #444; margin-bottom: 15px; font-family: 'Orbitron';">SISTEMA DE DESBLOQUEO</p>
+        <input type="text" id="pass" class="input-ultra" placeholder="••••">
+        <button class="btn-scan" onclick="ejecutar()">INICIAR ESCANEO CUÁNTICO</button>
+        
+        <div id="loader" style="display:none; margin-top:20px;">
+            <i class="fas fa-atom fa-spin" style="font-size: 2rem; color: var(--azul-quantum);"></i>
+            <p style="font-size: 0.7rem; margin-top:10px; font-family:'Orbitron';">ANALIZANDO PROBABILIDADES...</p>
+        </div>
+
+        <div id="res" class="resultado-anim">
+            <small style="color:var(--verde-neon); font-family:'Orbitron'; font-size:0.6rem;">ANÁLISIS COMPLETADO</small>
+            <div style="font-size: 1.2rem; font-weight: 900; margin-top: 10px;">NAPOLI GANA O EMPATA & +1.5 GOLES</div>
+        </div>
+    </div>
+
+    <div class="garantia-ultra">
+        <strong style="color:var(--verde-neon); font-family:'Orbitron'; font-size:0.8rem;">GARANTÍA ABSOLUTA ALPICKS</strong>
+        <p style="font-size: 0.75rem; color: #888; margin-top: 5px; font-weight: 600;">SI EL PICK NO RESULTA POSITIVO, TU PRÓXIMO ACCESO SERÁ 100% GRATUITO.</p>
+    </div>
+
+</div>
+
+<script>
+    // Contador FOMO Pro Max
+    let count = 9;
+    setInterval(() => {
+        if(count > 3) {
+            count--;
+            document.getElementById('cupos').innerText = count;
+        }
+    }, 45000);
+
+    // Función de Escaneo Ultra
+    function ejecutar() {
+        const val = document.getElementById('pass').value.toUpperCase().trim();
+        const load = document.getElementById('loader');
+        const res = document.getElementById('res');
+        const btn = document.querySelector('.btn-scan');
+
+        if(val === "VIP777") {
+            btn.style.display = 'none';
+            document.getElementById('pass').style.display = 'none';
+            load.style.display = 'block';
+
+            setTimeout(() => {
+                load.style.display = 'none';
+                res.style.display = 'block';
+                confetti({
+                    particleCount: 200,
+                    spread: 80,
+                    origin: { y: 0.7 },
+                    colors: ['#00ff88', '#00d9ff', '#ffffff']
+                });
+            }, 3000);
+        } else {
+            alert("Código incorrecto. El código se envía automáticamente al completar el pago.");
+        }
+    }
+</script>
+
+</body>
+</html>
