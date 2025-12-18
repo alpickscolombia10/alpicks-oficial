@@ -204,3 +204,74 @@
 
 </body>
 </html>
+
+<div id="trial-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #111218; border: 2px solid #00ff88; border-radius: 25px; padding: 30px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 0 40px rgba(0,255,136,0.2);">
+        
+        <div style="width: 70px; height: 70px; background: rgba(0,255,136,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-gift" style="color: #00ff88; font-size: 2rem;"></i>
+        </div>
+        
+        <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 10px;">LICENCIA DE EVALUACIÓN</h2>
+        <p style="font-size: 0.8rem; color: #888; line-height: 1.5; margin-bottom: 25px;">
+            Has sido seleccionado para una prueba de <span style="color:#fff; font-weight:bold;">15 DÍAS</span> del motor de Machine Learning ALPICKS.
+        </p>
+
+        <div style="text-align: left; margin-bottom: 25px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.75rem;">
+                <i class="fas fa-check" style="color:#00ff88;"></i> Acceso a Modelos Predictivos
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.75rem;">
+                <i class="fas fa-check" style="color:#00ff88;"></i> Inferencia en tiempo real
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.75rem;">
+                <i class="fas fa-check" style="color:#00ff88;"></i> Notificaciones de Valor (v8.4)
+            </div>
+        </div>
+
+        <button onclick="activateTrial()" style="width: 100%; padding: 18px; border-radius: 12px; border: none; background: #00ff88; color: #000; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; box-shadow: 0 10px 20px rgba(0,255,136,0.3);">
+            ACTIVAR 15 DÍAS GRATIS
+        </button>
+        
+        <p style="margin-top: 15px; font-size: 0.6rem; color: #444;">No se requiere tarjeta de crédito para la evaluación.</p>
+    </div>
+</div>
+
+<div id="trial-counter" style="display: none; background: #00ff88; color: #000; padding: 5px; text-align: center; font-size: 0.65rem; font-weight: 900; font-family: 'Orbitron';">
+    DÍAS RESTANTES DE LICENCIA: <span id="days-count">15</span>D 23H 59M
+</div>
+
+<script>
+    function activateTrial() {
+        // Efecto de dopamina al activar
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#00ff88', '#ffffff']
+        });
+
+        // Ocultar modal y mostrar contador
+        document.getElementById('trial-modal').style.display = 'none';
+        document.getElementById('trial-counter').style.display = 'block';
+        
+        // Aquí podrías guardar la fecha en localStorage para que el usuario no pueda reiniciar la prueba
+        localStorage.setItem('alpicks_trial_start', new Date().getTime());
+        
+        alert("¡SISTEMA ACTIVADO! Tienes 15 días de acceso al Machine Learning Engine.");
+    }
+
+    // Lógica para persistir la prueba al recargar la página
+    window.onload = function() {
+        if(localStorage.getItem('alpicks_trial_start')) {
+            document.getElementById('trial-modal').style.display = 'none';
+            document.getElementById('trial-counter').style.display = 'block';
+            
+            // Cálculo simple de días (ejemplo)
+            let start = localStorage.getItem('alpicks_trial_start');
+            let now = new Date().getTime();
+            let diff = 15 - Math.floor((now - start) / (1000 * 60 * 60 * 24));
+            document.getElementById('days-count').innerText = diff > 0 ? diff : 0;
+        }
+    }
+</script>
