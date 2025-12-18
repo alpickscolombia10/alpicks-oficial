@@ -3,168 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPICKS | LIVE ANALYTICS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <title>ALPICKS OS | THE ULTIMATE PREDICTOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --fs-bg: #1a1a1e;
-            --fs-card: #25252b;
-            --fs-border: #33333a;
-            --alpicks-green: #00ff88;
-            --alpicks-gold: #ffcc00;
+            --bg-master: #0a0b10;
+            --card-fs: #16181f;
+            --accent: #00ff88;
+            --warning: #ffcc00;
+            --danger: #ff4d4d;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--fs-bg); color: #e4e4e4; font-family: 'Roboto', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg-master); color: #fff; font-family: 'Inter', sans-serif; }
 
-        /* HEADER ESTILO FLASHSCORE PRO */
+        /* HEADER HIBRIDO (Lujo + Datos) */
         header {
-            background: #000; padding: 15px; border-bottom: 3px solid var(--alpicks-green);
-            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;
+            background: #000; padding: 20px; border-bottom: 2px solid var(--accent);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,255,136,0.15);
         }
-        .logo { font-family: 'Orbitron'; font-size: 1.2rem; color: var(--alpicks-gold); font-weight: 900; }
-        .live-count { background: #d00; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        .brand { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 900; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        .live-status { font-size: 0.65rem; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid #333; }
+        .dot { color: var(--danger); animation: blink 1s infinite; }
 
-        .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
+        .app-container { max-width: 500px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
 
-        /* SECCIONES POR LIGA */
-        .league-header {
-            background: #2e2e36; padding: 8px 15px; font-size: 0.75rem; font-weight: bold;
-            border-bottom: 1px solid var(--fs-border); display: flex; align-items: center; gap: 10px;
-        }
-        .league-header i { color: var(--alpicks-gold); }
-
-        /* PARTIDO ESTILO LISTA */
-        .match-row {
-            background: var(--fs-card); padding: 15px; border-bottom: 1px solid var(--fs-border);
-            display: grid; grid-template-columns: 50px 1fr 100px; align-items: center;
-        }
-
-        .match-time { font-size: 0.75rem; color: #888; text-align: center; border-right: 1px solid #3d3d45; height: 100%; display: flex; align-items: center; justify-content: center; }
+        /* LISTA TIPO FLASHSCORE PRO */
+        .category { font-size: 0.7rem; font-weight: 900; color: #666; text-transform: uppercase; margin: 15px 0 10px 5px; display: flex; align-items: center; gap: 8px; }
         
-        .match-teams { padding: 0 15px; }
-        .team-line { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
-        .team-line img { width: 18px; height: 18px; object-fit: contain; }
-        .team-line span { font-size: 0.9rem; font-weight: 400; }
-
-        /* BOTONES DE PREDICCIÓN */
-        .prediction-box { text-align: center; }
-        .btn-predict {
-            background: #3a3a45; border: 1px solid #4a4a55; color: var(--alpicks-green);
-            padding: 8px; border-radius: 6px; font-size: 0.65rem; font-weight: bold;
-            cursor: pointer; width: 100%; transition: 0.2s;
+        .game-row {
+            background: var(--card-fs); border-radius: 16px; padding: 20px; margin-bottom: 12px;
+            border-left: 4px solid transparent; transition: 0.3s; position: relative;
+            overflow: hidden;
         }
-        .btn-premium { background: var(--alpicks-gold); color: #000; border: none; }
+        .game-row.vip { border-left-color: var(--warning); background: linear-gradient(90deg, #16181f 0%, #1c1f26 100%); }
 
-        /* OVERLAY DE PAGO (MODAL) */
-        #payment-modal {
+        .game-meta { display: flex; justify-content: space-between; font-size: 0.65rem; color: #888; margin-bottom: 12px; }
+        .game-main { display: flex; align-items: center; justify-content: space-between; }
+        
+        .teams-v { width: 60%; }
+        .t-line { display: flex; align-items: center; gap: 12px; margin: 6px 0; }
+        .t-line img { width: 24px; height: 24px; object-fit: contain; }
+        .t-line span { font-weight: 700; font-size: 0.95rem; }
+
+        /* ACCIÓN (365SCORES STYLE) */
+        .predict-action { width: 35%; text-align: right; }
+        .btn-action {
+            padding: 10px 15px; border-radius: 10px; border: none; font-family: 'Orbitron';
+            font-size: 0.65rem; font-weight: 900; cursor: pointer; transition: 0.3s; width: 100%;
+        }
+        .btn-locked { background: #222; color: #555; }
+        .btn-premium { background: var(--warning); color: #000; box-shadow: 0 4px 15px rgba(255,204,0,0.2); }
+
+        /* TICKET VIP (REVELACIÓN) */
+        .ticket-reveal {
+            display: none; margin-top: 15px; border-top: 1px dashed #444; padding-top: 15px;
+            animation: slideDown 0.4s ease forwards;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .ticket-box {
+            background: #000; border: 1px solid var(--accent); border-radius: 12px; padding: 15px;
+            text-align: center; position: relative;
+        }
+        .ticket-box::before, .ticket-box::after { content: ''; position: absolute; width: 20px; height: 20px; background: var(--card-fs); border-radius: 50%; top: 50%; margin-top: -10px; }
+        .ticket-box::before { left: -11px; } .ticket-box::after { right: -11px; }
+
+        /* BOTTOM NAV DOCK */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: rgba(22,24,31,0.9);
+            backdrop-filter: blur(15px); border-radius: 25px; padding: 15px;
+            display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .dock-item { color: #555; font-size: 1.2rem; }
+        .dock-item.active { color: var(--accent); }
+
+        /* MODAL */
+        .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; z-index: 2000;
-            justify-content: center; align-items: center; padding: 20px;
+            background: rgba(0,0,0,0.95); display: none; z-index: 2000;
+            align-items: center; justify-content: center; padding: 20px;
         }
-        .modal-content {
-            background: var(--fs-card); padding: 30px; border-radius: 20px; text-align: center;
-            border: 1px solid var(--alpicks-gold); max-width: 400px; width: 100%;
-        }
+        .m-card { background: var(--card-fs); padding: 30px; border-radius: 25px; border: 1px solid var(--warning); width: 100%; max-width: 350px; text-align: center; }
 
-        /* BARRA INFERIOR */
-        .footer-nav {
-            position: fixed; bottom: 0; width: 100%; background: #000;
-            display: flex; justify-content: space-around; padding: 15px;
-            border-top: 1px solid var(--fs-border);
-        }
-        .nav-item { color: #666; font-size: 1.2rem; }
-        .nav-item.active { color: var(--alpicks-green); }
-
+        @keyframes blink { 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">ALPICKS <span style="color:white; font-size:0.8rem">PRO</span></div>
-    <div class="live-count"><i class="fas fa-satellite-dish"></i> 24 ANALIZANDO</div>
+    <div class="brand">ALPICKS <span style="font-size: 0.7rem; vertical-align: middle; color: #fff; opacity: 0.5;">OS</span></div>
+    <div class="live-status"><i class="fas fa-circle dot"></i> ENGINE v4.2 LIVE</div>
 </header>
 
-<div class="container">
+<div class="app-container">
+
+    <div class="category"><i class="fas fa-bolt"></i> Sugerencia de la IA</div>
     
-    <div class="league-header">
-        <i class="fas fa-trophy"></i> ITALIA: COPA ITALIA
-    </div>
-
-    <div class="match-row">
-        <div class="match-time">14:00</div>
-        <div class="match-teams">
-            <div class="team-line">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png">
-                <span>Napoli</span>
+    <div class="game-row vip">
+        <div class="game-meta">
+            <span>COPA ITALIA • 14:00</span>
+            <span style="color: var(--warning); font-weight: bold;">ALTA CONFIANZA</span>
+        </div>
+        <div class="game-main">
+            <div class="teams-v">
+                <div class="t-line">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png">
+                    <span>Napoli</span>
+                </div>
+                <div class="t-line">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png">
+                    <span>Milan</span>
+                </div>
             </div>
-            <div class="team-line">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png">
-                <span>Milan</span>
+            <div class="predict-action">
+                <button class="btn-action btn-premium" onclick="openGate()">DESBLOQUEAR</button>
             </div>
         </div>
-        <div class="prediction-box">
-            <button class="btn-predict btn-premium" onclick="openPayment()">VER PICK</button>
-        </div>
-    </div>
-
-    <div class="league-header">
-        <i class="fas fa-trophy"></i> INGLATERRA: PREMIER LEAGUE
-    </div>
-
-    <div class="match-row">
-        <div class="match-time">15:15</div>
-        <div class="match-teams">
-            <div class="team-line">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png">
-                <span>Chelsea</span>
+        
+        <div id="vip-ticket" class="ticket-reveal">
+            <div class="ticket-box">
+                <p style="font-size: 0.6rem; color: #666; margin-bottom: 5px;">TICKET ID: #99281</p>
+                <h4 style="color: var(--accent); font-family: 'Orbitron';">GANA NAPOLI & +1.5</h4>
+                <div style="font-size: 0.7rem; margin-top: 10px; color: #888;">CUOTA: 1.88 | PROB: 94.8%</div>
             </div>
-            <div class="team-line">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png">
-                <span>Man Utd</span>
-            </div>
-        </div>
-        <div class="prediction-box">
-            <button class="btn-predict" disabled>ANALIZANDO...</button>
         </div>
     </div>
 
-    <div style="padding: 20px; text-align: center;">
-        <p style="font-size: 0.7rem; color: #888; margin-bottom: 10px;">¿YA COMPRASTE? INGRESA TU ACCESO</p>
-        <input type="text" id="vipCode" placeholder="CÓDIGO VIP" style="padding: 10px; background: #000; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; font-family: 'Orbitron';">
-        <button onclick="checkVip()" style="padding: 10px 20px; background: var(--alpicks-green); border: none; border-radius: 5px; font-weight: bold; margin-top: 10px;">VALIDAR</button>
+    <div class="category"><i class="fas fa-list-ul"></i> Mercado General</div>
+
+    <div class="game-row">
+        <div class="game-meta"><span>PREMIER LEAGUE • 15:30</span><span>ANALIZANDO</span></div>
+        <div class="game-main">
+            <div class="teams-v">
+                <div class="t-line"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png"><span>Chelsea</span></div>
+                <div class="t-line"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png"><span>Man Utd</span></div>
+            </div>
+            <div class="predict-action"><button class="btn-action btn-locked" disabled>LOCK</button></div>
+        </div>
     </div>
 
 </div>
 
-<div id="payment-modal">
-    <div class="modal-content">
-        <h2 style="font-family: 'Orbitron'; color: var(--alpicks-gold);">ACCESO PREMIUM</h2>
-        <p style="margin: 20px 0; font-size: 0.9rem;">El análisis para Napoli vs Milan tiene una confianza del 94.8%.</p>
-        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-predict btn-premium" style="display: block; text-decoration: none; padding: 15px;">PAGAR $12.000</a>
-        <button onclick="closePayment()" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer;">Cerrar</button>
+<div class="dock">
+    <div class="dock-item active"><i class="fas fa-home"></i></div>
+    <div class="dock-item"><i class="fas fa-chart-line"></i></div>
+    <div class="dock-item" onclick="document.getElementById('m-code').style.display='flex'"><i class="fas fa-key"></i></div>
+    <div class="dock-item"><i class="fas fa-user"></i></div>
+</div>
+
+<div id="m-pay" class="modal">
+    <div class="m-card">
+        <i class="fas fa-crown" style="font-size: 2rem; color: var(--warning);"></i>
+        <h2 style="font-family:'Orbitron'; margin: 15px 0;">SISTEMA VIP</h2>
+        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 25px;">Accede al pronóstico de alta precisión generado por la IA de Alpicks.</p>
+        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-action btn-premium" style="display: block; text-decoration: none; padding: 18px;">PAGAR $12.000 COP</a>
+        <p onclick="this.parentElement.parentElement.style.display='none'" style="margin-top: 20px; font-size: 0.7rem; cursor: pointer; opacity: 0.5;">CERRAR VENTANA</p>
     </div>
 </div>
 
-<div class="footer-nav">
-    <div class="nav-item active"><i class="fas fa-futbol"></i></div>
-    <div class="nav-item"><i class="fas fa-star"></i></div>
-    <div class="nav-item"><i class="fas fa-chart-pie"></i></div>
-    <div class="nav-item"><i class="fas fa-user-circle"></i></div>
+<div id="m-code" class="modal">
+    <div class="m-card" style="border-color: var(--accent);">
+        <h3 style="font-family:'Orbitron'; margin-bottom: 15px;">VALIDAR ACCESO</h3>
+        <input type="text" id="vCode" placeholder="CÓDIGO VIP" style="width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; text-align: center; border-radius: 12px; font-family: 'Orbitron';">
+        <button onclick="valCode()" style="width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 12px; margin-top: 15px; font-weight: 900;">ACTIVAR</button>
+    </div>
 </div>
 
 <script>
-    function openPayment() { document.getElementById('payment-modal').style.display = 'flex'; }
-    function closePayment() { document.getElementById('payment-modal').style.display = 'none'; }
+    function openGate() { document.getElementById('m-pay').style.display = 'flex'; }
     
-    function checkVip() {
-        if(document.getElementById('vipCode').value.toUpperCase() === "VIP777") {
-            confetti();
-            alert("PICK DESBLOQUEADO: Gana Napoli (Doble oportunidad) y Over 1.5 goles.");
+    function valCode() {
+        if(document.getElementById('vCode').value.toUpperCase() === "VIP777") {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.8 } });
+            document.getElementById('m-code').style.display = 'none';
+            document.getElementById('vip-ticket').style.display = 'block';
+            document.querySelector('.btn-premium').innerText = "DESBLOQUEADO";
+            document.querySelector('.btn-premium').style.background = "#00ff88";
         } else {
-            alert("Código inválido. Completa el pago en Bold.");
+            alert("Acceso denegado. Código inválido.");
         }
     }
 </script>
