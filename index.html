@@ -3,108 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPICKS | ML ENGINE</title>
+    <title>ALPICKS</title>
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --sk-bg: #0f212e; --sk-card: #1a2c38; --sk-green: #00e701; --sk-blue: #2f4553; --text: #b1bad3; }
-        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--sk-bg); color: var(--text); font-family: 'Inter', sans-serif; }
+        :root {
+            --dark-bg: #0f212e; /* Fondo principal de Stake */
+            --card-bg: #1a2c38; /* Fondo de tarjetas de Stake */
+            --highlight-green: #00e701; /* Verde neón de Stake */
+            --text-color: #b1bad3;
+            --white-color: #ffffff;
+            --light-blue: #2f4553;
+        }
 
-        header { background: var(--sk-card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--sk-bg); position: sticky; top:0; z-index: 1000; }
-        .logo { font-family: 'Orbitron'; color: #fff; font-size: 1rem; letter-spacing: 1px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--dark-bg); color: var(--text-color); font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        .app-container { padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
+        /* MOTION GRAPHICS - MATRIX BACKGROUND */
+        .matrix-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0,231,1,0.05) 0%, rgba(15,33,46,0.9) 70%);
+            z-index: -1; pointer-events: none;
+            overflow: hidden;
+        }
+        .matrix-background::before {
+            content: "";
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 1px,
+                rgba(0,231,1,0.03) 1px,
+                rgba(0,231,1,0.03) 2px
+            );
+            animation: matrix-scroll 100s linear infinite;
+        }
+        @keyframes matrix-scroll {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100%); }
+        }
 
-        /* CARD PRINCIPAL */
-        .match-card { background: var(--sk-card); border-radius: 12px; padding: 20px; margin-bottom: 15px; border-bottom: 4px solid var(--sk-blue); }
-        .match-header { font-size: 0.6rem; font-weight: 800; color: var(--sk-green); margin-bottom: 15px; text-transform: uppercase; }
+        /* HEADER */
+        header {
+            background: var(--card-bg); padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--dark-bg); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-main { color: var(--white-color); font-weight: 900; font-size: 1.3rem; letter-spacing: 0.5px; }
+        .live-status { font-size: 0.7rem; font-weight: 700; color: var(--highlight-green); display: flex; align-items: center; gap: 8px; }
+        .live-dot { width: 8px; height: 8px; background: var(--highlight-green); border-radius: 50%; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* SUB-NAVEGACIÓN (TABS) */
+        .sub-nav { background: var(--card-bg); display: flex; border-bottom: 1px solid var(--light-blue); }
+        .sub-item { flex: 1; padding: 12px; text-align: center; font-size: 0.7rem; font-weight: 700; cursor: pointer; color: var(--text-color); text-transform: uppercase; }
+        .sub-item.active { color: var(--white-color); border-bottom: 3px solid var(--highlight-green); }
+
+        /* PAGE CONTAINER (SCROLLABLE) */
+        .page-container { flex: 1; overflow-y: auto; padding: 12px; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* MATCH CARD - LISTADO PRINCIPAL */
+        .match-card {
+            background: var(--card-bg); border-radius: 8px; padding: 15px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent;
+            cursor: pointer; transition: 0.2s;
+        }
+        .match-card:hover { border-left-color: var(--light-blue); }
+        .match-card.highlight { border-left-color: var(--highlight-green); }
+
+        .match-info { flex: 1; }
+        .match-league { font-size: 0.6rem; color: var(--text-color); margin-bottom: 5px; opacity: 0.7; }
+        .teams-display { display: flex; align-items: center; gap: 10px; color: var(--white-color); font-weight: 700; font-size: 0.9rem; }
+        .team-logo { width: 25px; height: 25px; object-fit: contain; }
+        .score-time { font-size: 0.8rem; font-weight: 700; color: var(--white-color); }
+        .score-time.live { color: var(--highlight-green); animation: pulse 1s infinite; }
+
+        /* PICK PRO CARD (DETALLE) */
+        .pick-pro-card {
+            background: var(--card-bg); border-radius: 12px; padding: 25px; margin-top: 15px;
+            border: 1px solid var(--highlight-green);
+        }
+        .pick-match-header { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .pick-team-logo { width: 40px; height: 40px; object-fit: contain; }
+        .pick-match-name { color: var(--white-color); font-weight: 800; font-size: 1.1rem; text-align: center; flex: 1; }
+
+        .pick-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .detail-item { background: var(--dark-bg); padding: 10px; border-radius: 6px; text-align: center; }
+        .detail-label { font-size: 0.65rem; color: var(--text-color); margin-bottom: 5px; opacity: 0.7; }
+        .detail-value { font-size: 0.9rem; font-weight: 800; color: var(--white-color); }
+        .detail-value.green { color: var(--highlight-green); }
+
+        .pick-argument { font-size: 0.8rem; line-height: 1.6; color: var(--text-color); margin-bottom: 25px; }
         
-        .teams { display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; }
-        .team { text-align: center; }
-        .shield { width: 50px; height: 50px; background: var(--sk-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; border: 2px solid var(--sk-blue); }
-        .team-name { color: #fff; font-size: 0.8rem; font-weight: 700; }
+        .btn-unlock {
+            width: 100%; padding: 15px; background: var(--highlight-green); color: var(--dark-bg);
+            border: none; border-radius: 6px; font-weight: 900; font-size: 0.85rem; cursor: pointer;
+            transition: 0.2s;
+        }
 
-        /* ENGINE VISUAL */
-        .engine-ui { background: var(--sk-bg); padding: 15px; border-radius: 8px; margin: 15px 0; }
-        .bar-bg { width: 100%; height: 6px; background: var(--sk-blue); border-radius: 3px; margin-top: 8px; overflow: hidden; }
-        .bar-fill { height: 100%; background: var(--sk-green); width: 94.8%; box-shadow: 0 0 10px var(--sk-green); }
+        /* BOTTOM NAVIGATION */
+        nav.main-nav { background: var(--card-bg); display: flex; justify-content: space-around; padding: 15px; border-top: 2px solid var(--dark-bg); }
+        .nav-item { text-align: center; color: var(--text-color); font-size: 0.65rem; font-weight: 700; cursor: pointer; }
+        .nav-item i { font-size: 1.3rem; display: block; margin-bottom: 5px; }
+        .nav-item.active { color: var(--white-color); }
 
-        .btn-pay { width: 100%; padding: 18px; background: var(--sk-green); color: #000; border: none; border-radius: 4px; font-weight: 900; font-family: 'Orbitron'; font-size: 0.8rem; cursor: pointer; margin-top: 10px; }
-
-        /* BANNER DE INSTALACIÓN (HACK) */
-        #install-banner { position: fixed; bottom: 80px; left: 10px; right: 10px; background: var(--sk-blue); padding: 15px; border-radius: 10px; display: none; z-index: 2000; border: 1px solid var(--sk-green); }
-
-        .dock { position: fixed; bottom: 0; width: 100%; background: var(--sk-card); display: flex; justify-content: space-around; padding: 20px; border-top: 2px solid var(--sk-bg); }
-        .dock i { font-size: 1.2rem; color: #556c7d; }
-        .dock i.active { color: #fff; }
+        /* INSTALL BANNER */
+        #install-prompt {
+            position: fixed; bottom: 80px; left: 10px; right: 10px;
+            background: var(--light-blue); padding: 15px; border-radius: 10px;
+            display: none; z-index: 1500; border: 1px solid var(--highlight-green);
+            align-items: center; justify-content: space-between;
+        }
+        #install-prompt p { font-size: 0.8rem; color: var(--white-color); margin: 0; }
+        #install-prompt button {
+            background: var(--highlight-green); color: var(--dark-bg); border: none;
+            padding: 8px 12px; border-radius: 4px; font-weight: 700; font-size: 0.7rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">ALPICKS OS</div>
-    <div style="font-size: 0.6rem; font-weight: 900; color: var(--sk-green);">POWERED BY STAKE</div>
-</header>
+    <div class="matrix-background"></div>
 
-<div class="app-container">
-    <div class="match-card">
-        <div class="match-header"><i class="fas fa-microchip"></i> Machine Learning Inferencia</div>
-        <div class="teams">
-            <div class="team"><div class="shield"><i class="fas fa-shield-halved" style="color:#0055ff"></i></div><div class="team-name">NAPOLI</div></div>
-            <div style="font-weight:900; opacity:0.2">VS</div>
-            <div class="team"><div class="shield"><i class="fas fa-shield-halved" style="color:#ff0000"></i></div><div class="team-name">MILAN</div></div>
-        </div>
-        <div class="engine-ui">
-            <div style="display:flex; justify-content:space-between; font-size:0.6rem; font-weight:800;">
-                <span>MODELO DE PRECISIÓN</span>
-                <span style="color:var(--sk-green)">94.8%</span>
+    <header>
+        <div class="logo-main">ALPICKS</div>
+        <div class="live-status"><div class="live-dot"></div>14 PARTIDOS EN VIVO</div>
+    </header>
+
+    <div class="sub-nav">
+        <div class="sub-item active" onclick="switchSubTab(this, 'all-matches')">HOY</div>
+        <div class="sub-item" onclick="switchSubTab(this, 'live-matches')">EN VIVO</div>
+        <div class="sub-item" onclick="switchSubTab(this, 'completed-matches')">FINALIZADOS</div>
+    </div>
+
+    <div class="page-container">
+        
+        <div id="page-all-matches" class="page active">
+            <div class="match-card highlight" onclick="showPickDetail('napoli-milan')">
+                <div class="match-info">
+                    <div class="match-league">COPA ITALIA</div>
+                    <div class="teams-display">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png" class="team-logo">
+                        <span>Napoli</span>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png" class="team-logo">
+                        <span>AC Milan</span>
+                    </div>
+                </div>
+                <div class="score-time">14:00</div>
             </div>
-            <div class="bar-bg"><div class="bar-fill"></div></div>
+
+            <div class="match-card">
+                <div class="match-info">
+                    <div class="match-league">PREMIER LEAGUE</div>
+                    <div class="teams-display">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png" class="team-logo">
+                        <span>Chelsea</span>
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/g/g0/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png" class="team-logo">
+                        <span>Man Utd</span>
+                    </div>
+                </div>
+                <div class="score-time">16:30</div>
+            </div>
         </div>
-        <button class="btn-pay" onclick="location.href='https://checkout.bold.co/payment/LNK_IVT8NCM2JP'">DESBLOQUEAR TICKET</button>
-    </div>
-</div>
 
-<div id="install-banner">
-    <div style="display:flex; align-items:center; gap:15px;">
-        <i class="fas fa-download" style="color:var(--sk-green); font-size:1.5rem;"></i>
-        <div style="flex:1">
-            <p style="color:#fff; font-size:0.8rem; font-weight:700;">Instala Alpicks OS</p>
-            <p style="font-size:0.6rem;">Acceso directo desde tu menú principal.</p>
+        <div id="page-pick-detail" class="page">
+            <div class="pick-pro-card">
+                <div class="pick-match-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png" class="pick-team-logo">
+                    <span class="pick-match-name">Napoli vs AC Milan</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png" class="pick-team-logo">
+                </div>
+
+                <div class="pick-details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">CUOTA</div>
+                        <div class="detail-value green">1.85</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">STAKE</div>
+                        <div class="detail-value">3/5</div>
+                    </div>
+                </div>
+                
+                <p class="pick-argument">
+                    Análisis del motor ALPICKS v10: El algoritmo detectó un valor significativo en la defensa local. Napoli xG (Goles Esperados) fatiga de ataque.
+                    <br><br>
+                    **PICK:** Hándicap Asiático +0.5 Napoli.
+                </p>
+
+                <button class="btn-unlock" onclick="location.href='https://checkout.bold.co/payment/LNK_IVT8NCM2JP'">
+                    DESBLOQUEAR ANÁLISIS ($12.000)
+                </button>
+            </div>
         </div>
-        <button id="btn-install" style="background:var(--sk-green); border:none; padding:8px 12px; border-radius:4px; font-weight:900; font-size:0.7rem;">INSTALAR</button>
+        
     </div>
-</div>
 
-<nav class="dock">
-    <i class="fas fa-home active"></i>
-    <i class="fas fa-chart-line"></i>
-    <i class="fas fa-robot"></i>
-    <i class="fas fa-user"></i>
-</nav>
+    <nav class="main-nav">
+        <div class="nav-item active" onclick="switchMainTab(this, 'all-matches')"><i class="fas fa-futbol"></i>Partidos</div>
+        <div class="nav-item" onclick="switchMainTab(this, 'pick-detail')"><i class="fas fa-chart-line"></i>Picks Pro</div>
+        <div class="nav-item"><i class="fas fa-star"></i>Favoritos</div>
+        <div class="nav-item"><i class="fas fa-user"></i>Perfil</div>
+    </nav>
 
-<script>
-    // LÓGICA DE INSTALACIÓN
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('install-banner').style.display = 'block';
-    });
+    <div id="install-prompt">
+        <p>Instala ALPICKS para un acceso más rápido.</p>
+        <button id="btn-install">INSTALAR APP</button>
+    </div>
 
-    document.getElementById('btn-install').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                document.getElementById('install-banner').style.display = 'none';
+    <script>
+        // Funcionalidad de Pestañas
+        function switchSubTab(el, pageId) {
+            document.querySelectorAll('.sub-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            switchMainTab(document.querySelector('.nav-item.active'), pageId); // Asegura que la navegación principal también se actualice
+        }
+
+        function switchMainTab(el, pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.main-nav .nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById('page-' + pageId).classList.add('active');
+            el.classList.add('active');
+
+            // Si cambiamos a "Picks Pro" directamente desde la nav principal
+            if (pageId === 'pick-detail') {
+                document.querySelector('.sub-nav .sub-item.active').classList.remove('active'); // Desactiva la sub-tab actual
+                // No hay sub-tab para picks-detail, así que no activamos ninguna
+            } else {
+                // Si vamos a una página con sub-tabs, nos aseguramos de que una sub-tab esté activa
+                const currentSubTab = document.querySelector('.sub-nav .sub-item.active');
+                if (!currentSubTab) {
+                    document.querySelector('.sub-nav .sub-item:first-child').classList.add('active');
+                }
             }
         }
-    });
-</script>
+
+        function showPickDetail(matchId) {
+            // Aquí podrías cargar datos específicos del matchId si tuvieras más picks
+            switchMainTab(document.querySelector('nav .nav-item:nth-child(2)'), 'pick-detail'); // Activa la pestaña "Picks Pro"
+        }
+
+        // Lógica de Instalación de PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-prompt').style.display = 'flex';
+        });
+
+        document.getElementById('btn-install').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('install-prompt').style.display = 'none';
+                }
+            }
+        });
+
+        // Activar la pestaña inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            switchMainTab(document.querySelector('nav .nav-item:first-child'), 'all-matches');
+        });
+    </script>
 
 </body>
 </html>
