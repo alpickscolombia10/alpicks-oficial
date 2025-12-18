@@ -3,158 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPICKS | PROFESSIONAL PREDICTOR</title>
+    <title>ALPICKS | DATA ENGINE</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Orbitron:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --bg: #0b161f; --card: #162634; --green: #00e701; --blue: #2f4553; --text: #b1bad3; --white: #ffffff; --orange: #ff4d00; }
-        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
 
-        /* SPLASH SCREEN */
+        /* SPLASH SCREEN PANTALLA COMPLETA */
         #splash {
             position: fixed; inset: 0; background: var(--bg); z-index: 10000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.8s ease;
+            display: flex; align-items: center; justify-content: center;
         }
-        .splash-logo { width: 150px; filter: drop-shadow(0 0 20px var(--green)); animation: pulse 2s infinite; }
+        #splash img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* INTERFAZ PRINCIPAL */
-        .app-container { display: none; height: 100vh; flex-direction: column; }
+        /* APP CONTAINER */
+        #main-app { display: none; height: 100vh; flex-direction: column; }
         header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; }
         .logo-text { font-family: 'Orbitron'; color: #fff; font-size: 1.2rem; }
 
         .content { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
 
-        /* MATCH CARD ESTILO STAKE */
-        .match-card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 15px; position: relative; border: 1px solid rgba(255,255,255,0.05); }
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .fav-star { font-size: 1.2rem; color: #556c7d; cursor: pointer; }
+        /* MATCH CARD */
+        .match-card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.65rem; font-weight: 800; }
+        .fav-star { font-size: 1.3rem; color: #556c7d; }
         .fav-star.active { color: #ffcc00; }
 
         .teams { display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center; text-align: center; margin-bottom: 15px; }
         .team-box img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 5px; }
-        .team-name { color: #fff; font-weight: 700; font-size: 0.9rem; }
+        .team-name { color: #fff; font-weight: 700; font-size: 0.85rem; }
 
         /* BOTONES DE PICK */
-        .pick-buttons { display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px; margin-bottom: 12px; }
-        .btn-pick-tag { background: rgba(0,231,1,0.1); color: var(--green); border: 1px solid var(--green); padding: 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-align: center; }
-        .btn-buy-pulse { background: var(--orange); color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; animation: pulse-red 1.5s infinite; cursor: pointer; }
-
-        .guaranty-msg { font-size: 0.6rem; text-align: center; color: var(--text); opacity: 0.8; margin-bottom: 15px; }
+        .pick-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .btn-pick-tag { background: rgba(0,231,1,0.1); color: var(--green); border: 1px solid var(--green); padding: 10px; border-radius: 6px; font-size: 0.6rem; font-weight: 800; text-align: center; }
+        .btn-buy-pulse { background: var(--orange); color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 0.6rem; font-weight: 900; animation: pulse-btn 1.5s infinite; }
         
+        .guaranty { font-size: 0.55rem; color: #888; text-align: center; margin-bottom: 15px; }
+
         .odds-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
-        .odd-item { background: var(--bg); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid var(--blue); cursor: pointer; transition: 0.2s; }
-        .odd-item:hover { background: var(--blue); }
-        .odd-val { color: var(--white); font-weight: 900; display: block; font-size: 0.85rem; }
+        .odd-item { background: var(--bg); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid var(--blue); cursor: pointer; }
+        .odd-val { color: #fff; font-weight: 900; font-size: 0.85rem; }
 
-        /* VIP MODAL */
+        /* MODAL VIP */
         #vip-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
-        .vip-list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--card); border-radius: 8px; margin-bottom: 8px; font-size: 0.75rem; color: #fff; font-weight: 600; }
-        .btn-bold { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; margin-top: 10px; cursor: pointer; }
+        .vip-item { display: flex; align-items: center; justify-content: space-between; background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.75rem; color: #fff; }
+        .btn-bold { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; margin-top: 10px; }
 
-        /* NAV */
-        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 20px; border-top: 1px solid #000; }
-        .nav-item { text-align: center; color: #556c7d; font-size: 0.6rem; font-weight: 800; }
+        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 18px; border-top: 1px solid #000; }
+        .nav-item { color: #556c7d; font-size: 0.6rem; font-weight: 800; text-align: center; }
         .nav-item.active { color: var(--green); }
-        .nav-item.vip-nav { color: var(--orange); }
+        .nav-item.vip-n { color: var(--orange); }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.7; } }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255,77,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,77,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,77,0,0); } }
+        @keyframes pulse-btn { 0% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 15px var(--orange); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
     <div id="splash">
-        <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg" alt="ALPICKS LOGO" class="splash-logo">
-        <h1 style="font-family: 'Orbitron'; color: #fff; margin-top: 20px; font-size: 1.5rem;">ALPICKS</h1>
+        <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg">
     </div>
 
-    <div class="app-container" id="main-app">
+    <div id="main-app">
         <header>
             <div class="logo-text">ALPICKS</div>
-            <div style="font-size: 0.6rem; color: var(--green); font-weight: 900;"><i class="fas fa-circle"></i> SYSTEM ONLINE</div>
+            <div style="font-size: 0.6rem; color: var(--green); font-weight: 900;">LIVE API CONNECTED</div>
         </header>
 
-        <div class="content">
-            <div style="font-size: 0.6rem; font-weight: 900; color: var(--green); margin-bottom: 10px;">FRIDAY 19/12 - TOP LIGAS</div>
-
-            <div class="match-card">
-                <div class="match-header">
-                    <span style="font-size: 0.6rem; font-weight: 800;">BUNDESLIGA / ALEMANIA <i class="fas fa-fire" style="color:var(--orange)"></i></span>
-                    <i class="fas fa-star fav-star" onclick="toggleFav(this)"></i>
-                </div>
-                <div class="teams">
-                    <div class="team-box">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/1200px-Borussia_Dortmund_logo.svg.png">
-                        <div class="team-name">Dortmund</div>
-                    </div>
-                    <div style="font-size: 0.7rem; font-weight: 900;">14:30</div>
-                    <div class="team-box">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Borussia_M%C3%B6nchengladbach_logo.svg/1200px-Borussia_M%C3%B6nchengladbach_logo.svg.png">
-                        <div class="team-name">Mgladbach</div>
-                    </div>
-                </div>
-                <div class="pick-buttons">
-                    <div class="btn-pick-tag">NUESTRO PICK DIARIO <i class="fas fa-check-circle"></i></div>
-                    <button class="btn-buy-pulse" onclick="window.location.href='https://checkout.bold.co/payment/LNK_IVT8NCM2JP'">RECIBE TU PICK POR $10.000</button>
-                </div>
-                <div class="guaranty-msg">GARANTIA: SI EL PICK DIARIO FALLA, EL SIGUIENTE SERA TOTALMENTE GRATUITO.</div>
-                <div class="odds-grid">
-                    <div class="odd-item" onclick="window.location.href='https://stake.com.co'"><span class="odd-val">1.48</span></div>
-                    <div class="odd-item" onclick="window.location.href='https://stake.com.co'"><span class="odd-val">4.75</span></div>
-                    <div class="odd-item" onclick="window.location.href='https://stake.com.co'"><span class="odd-val">6.50</span></div>
-                </div>
-            </div>
-
-            <div class="match-card">
-                <div class="match-header">
-                    <span style="font-size: 0.6rem; font-weight: 800;">LA LIGA / ESPAÑA <i class="fas fa-fire" style="color:var(--orange)"></i></span>
-                    <i class="fas fa-star fav-star" onclick="toggleFav(this)"></i>
-                </div>
-                <div class="teams">
-                    <div class="team-box">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/ce/Valenciacf.svg/1200px-Valenciacf.svg.png">
-                        <div class="team-name">Valencia</div>
-                    </div>
-                    <div style="font-size: 0.7rem; font-weight: 900;">15:00</div>
-                    <div class="team-box">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/70/Deportivo_Alav%C3%A9s_logo.svg/1200px-Deportivo_Alav%C3%A9s_logo.svg.png">
-                        <div class="team-name">Alavés</div>
-                    </div>
-                </div>
-                <div class="pick-buttons">
-                    <div class="btn-pick-tag">NUESTRO PICK DIARIO <i class="fas fa-check-circle"></i></div>
-                    <button class="btn-buy-pulse" onclick="window.location.href='https://checkout.bold.co/payment/LNK_IVT8NCM2JP'">RECIBE TU PICK POR $10.000</button>
-                </div>
-                <div class="guaranty-msg">GARANTIA: SI EL PICK DIARIO FALLA, EL SIGUIENTE SERA TOTALMENTE GRATUITO.</div>
-                <div class="odds-grid">
-                    <div class="odd-item" onclick="window.location.href='https://stake.com.co'"><span class="odd-val">2.02</span></div>
-                    <div class="odd-item" onclick="window.location.href='https://stake.com.co'"><span class="odd-val">3.30</span></div>
-                    <div class="odd-item" onclick="window.location.href='https://stake.com.co'"><span class="odd-val">4.20</span></div>
-                </div>
-            </div>
+        <div class="content" id="matches-container">
+            <p style="text-align:center; margin-top:50px;">Cargando datos de las ligas europeas...</p>
         </div>
 
         <nav>
-            <div class="nav-item active"><i class="fas fa-futbol"></i>PARTIDOS</div>
-            <div class="nav-item"><i class="fas fa-play"></i>DIRECTO</div>
-            <div class="nav-item"><i class="fas fa-star"></i>FAVORITOS</div>
-            <div class="nav-item vip-nav" onclick="showVIP()"><i class="fas fa-crown"></i>VIP</div>
+            <div class="nav-item active"><i class="fas fa-futbol" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>PARTIDOS</div>
+            <div class="nav-item"><i class="fas fa-play" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>DIRECTO</div>
+            <div class="nav-item"><i class="fas fa-star" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>FAVORITOS</div>
+            <div class="nav-item vip-n" onclick="openVIP()"><i class="fas fa-crown" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>VIP</div>
         </nav>
     </div>
 
     <div id="vip-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <h2 style="font-family:'Orbitron'; color:#fff; font-size:1rem;">APUESTA INTELIGENTE</h2>
-            <i class="fas fa-times" onclick="closeVIP()" style="font-size:1.5rem;"></i>
+        <div style="display:flex; justify-content:space-between; margin-bottom:25px;">
+            <h2 style="font-family:'Orbitron'; color:#fff; font-size:0.9rem;">APUESTA INTELIGENTE CON ALPICKS!</h2>
+            <i class="fas fa-times" onclick="closeVIP()" style="color:#fff; font-size:1.2rem;"></i>
         </div>
-        
-        <div class="vip-list-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> ANALISIS MACHINE LEARNING <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-list-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CANAL TELEGRAM VIP <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-list-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 1 A 3 PICKS POR DIA <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-list-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> GESTION DE RIESGO <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-list-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CUOTAS 1.70 O MÁS <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-list-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 60% PROBABILIDAD <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-
-        <button class="btn-bold" style="background:var(--blue); color:#fff;" onclick="window.location.href='LINK_BOLD_SEMANAL
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> ANALISIS DE FUTBOL CON MACHINE LEARNING <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CANAL DE TELEGRAM PARA USUARIOS VIP <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 1 A 3 PICKS DE VALOR POR DIA <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CONTROL Y GESTION DEL RIESGO <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--
