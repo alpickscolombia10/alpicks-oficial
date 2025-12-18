@@ -1,0 +1,15 @@
+{
+  "name": "ALPICKS",
+  "short_name": "Alpicks",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f212e",
+  "theme_color": "#00e701",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
