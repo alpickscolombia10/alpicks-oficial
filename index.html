@@ -3,93 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPICKS | DATA ENGINE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Orbitron:wght@800&display=swap" rel="stylesheet">
+    <title>ALPICKS | TERMINAL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --bg: #0b161f; --card: #162634; --green: #00e701; --blue: #2f4553; --text: #b1bad3; --white: #ffffff; --orange: #ff4d00; }
-        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
+        :root { --bg: #0b161f; --card: #162634; --green: #00e701; --blue: #2f4553; --text: #b1bad3; --orange: #ff4d00; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
 
-        /* SPLASH SCREEN PANTALLA COMPLETA */
+        /* SPLASH SCREEN (BLINDADO) */
         #splash {
-            position: fixed; inset: 0; background: var(--bg); z-index: 10000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 99999;
             display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.6s ease-out;
         }
-        #splash img { width: 100%; height: 100%; object-fit: cover; }
+        #splash img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; /* Celular: Pantalla completa */
+        }
+        @media (min-width: 768px) { #splash img { object-fit: contain; } }
 
         /* APP CONTAINER */
-        #main-app { display: none; height: 100vh; flex-direction: column; }
-        header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; }
+        #main-app { visibility: hidden; opacity: 0; height: 100vh; display: flex; flex-direction: column; transition: opacity 0.5s ease; }
+        
+        header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; }
         .logo-text { font-family: 'Orbitron'; color: #fff; font-size: 1.2rem; }
 
         .content { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
 
         /* MATCH CARD */
         .match-card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.65rem; font-weight: 800; }
-        .fav-star { font-size: 1.3rem; color: #556c7d; }
-        .fav-star.active { color: #ffcc00; }
-
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.65rem; font-weight: 800; color: #fff; }
+        
         .teams { display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center; text-align: center; margin-bottom: 15px; }
-        .team-box img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 5px; }
+        .team-box img { width: 40px; height: 40px; object-fit: contain; margin-bottom: 5px; }
         .team-name { color: #fff; font-weight: 700; font-size: 0.85rem; }
 
-        /* BOTONES DE PICK */
         .pick-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .btn-pick-tag { background: rgba(0,231,1,0.1); color: var(--green); border: 1px solid var(--green); padding: 10px; border-radius: 6px; font-size: 0.6rem; font-weight: 800; text-align: center; }
-        .btn-buy-pulse { background: var(--orange); color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 0.6rem; font-weight: 900; animation: pulse-btn 1.5s infinite; }
+        .btn-tag { background: rgba(0,231,1,0.1); color: var(--green); border: 1px solid var(--green); padding: 10px; border-radius: 6px; font-size: 0.55rem; font-weight: 800; text-align: center; display: flex; align-items: center; justify-content: center; gap: 3px; }
+        .btn-buy { background: var(--orange); color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 0.6rem; font-weight: 900; animation: heartbeat 1.5s infinite; cursor: pointer; text-decoration: none; text-align: center; }
         
-        .guaranty { font-size: 0.55rem; color: #888; text-align: center; margin-bottom: 15px; }
+        .guaranty { font-size: 0.5rem; color: #888; text-align: center; margin-bottom: 12px; }
 
         .odds-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
-        .odd-item { background: var(--bg); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid var(--blue); cursor: pointer; }
-        .odd-val { color: #fff; font-weight: 900; font-size: 0.85rem; }
+        .odd { background: var(--bg); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid var(--blue); color: #fff; font-weight: 900; font-size: 0.8rem; text-decoration: none; }
 
-        /* MODAL VIP */
-        #vip-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
-        .vip-item { display: flex; align-items: center; justify-content: space-between; background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.75rem; color: #fff; }
-        .btn-bold { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; margin-top: 10px; }
+        /* VIP MODAL */
+        #vip-modal { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
+        .vip-item { display: flex; align-items: center; gap: 10px; background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.7rem; color: #fff; }
+        .btn-bold { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; margin-top: 10px; color: #fff; text-decoration: none; text-align: center; display: block; }
 
         nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 18px; border-top: 1px solid #000; }
         .nav-item { color: #556c7d; font-size: 0.6rem; font-weight: 800; text-align: center; }
         .nav-item.active { color: var(--green); }
         .nav-item.vip-n { color: var(--orange); }
 
-        @keyframes pulse-btn { 0% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 15px var(--orange); } 100% { transform: scale(1); } }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
     </style>
 </head>
 <body>
 
     <div id="splash">
-        <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg">
+        <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg" alt="Logo">
     </div>
 
     <div id="main-app">
         <header>
             <div class="logo-text">ALPICKS</div>
-            <div style="font-size: 0.6rem; color: var(--green); font-weight: 900;">LIVE API CONNECTED</div>
+            <div style="font-size: 0.6rem; color: var(--green); font-weight: 900;"><i class="fas fa-circle"></i> API LIVE</div>
         </header>
 
         <div class="content" id="matches-container">
-            <p style="text-align:center; margin-top:50px;">Cargando datos de las ligas europeas...</p>
+            <p style="text-align:center; padding:20px;">Sincronizando partidos de hoy...</p>
         </div>
 
         <nav>
             <div class="nav-item active"><i class="fas fa-futbol" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>PARTIDOS</div>
             <div class="nav-item"><i class="fas fa-play" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>DIRECTO</div>
-            <div class="nav-item"><i class="fas fa-star" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>FAVORITOS</div>
-            <div class="nav-item vip-n" onclick="openVIP()"><i class="fas fa-crown" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>VIP</div>
+            <div class="nav-item" onclick="openVIP()"><i class="fas fa-crown" style="display:block; font-size:1.2rem; margin-bottom:3px; color:var(--orange)"></i>VIP</div>
         </nav>
     </div>
 
     <div id="vip-modal">
-        <div style="display:flex; justify-content:space-between; margin-bottom:25px;">
-            <h2 style="font-family:'Orbitron'; color:#fff; font-size:0.9rem;">APUESTA INTELIGENTE CON ALPICKS!</h2>
-            <i class="fas fa-times" onclick="closeVIP()" style="color:#fff; font-size:1.2rem;"></i>
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <h2 style="font-family:'Orbitron'; color:#fff; font-size:0.8rem;">APUESTA INTELIGENTE CON ALPICKS!</h2>
+            <i class="fas fa-times" onclick="closeVIP()" style="color:#fff; font-size:1.5rem;"></i>
         </div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> ANALISIS DE FUTBOL CON MACHINE LEARNING <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CANAL DE TELEGRAM PARA USUARIOS VIP <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 1 A 3 PICKS DE VALOR POR DIA <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CONTROL Y GESTION DEL RIESGO <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> ANALISIS MACHINE LEARNING <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CANAL TELEGRAM VIP <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 1 A 3 PICKS DE VALOR POR DÍA <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> GESTION DEL RIESGO <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CUOTAS 1.70 Y MÁS <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 60% PROBABILIDAD DE ACIERTO <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
+
+        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-bold" style="background:var(--blue);">SEMANAL - 25.000/por semana</a>
+        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-bold" style="background:var(--green); color:#000;">SUSCRIPCION MENSUAL - $55.000</a>
+        
+        <p style="font-size:0.5rem; text-align:center; margin-top:15px; color:#888;">Duracion: Diario(1 pick), Semanal(7 tips), Mensual(30 tips).</p>
+    </div>
+
+    <script>
+        const API_KEY = "328d7a3b494469c2386dac3e4aa15a18";
+
+        // 1. RELOJ BLINDADO: A los 3 segundos se quita el Splash sí o sí
+        setTimeout(showApp, 3000);
+
+        function showApp() {
+            const splash = document.getElementById('splash');
+            const app = document.getElementById('main-app');
+            
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                app.style.visibility = 'visible';
+                app.style.opacity = '1';
+                fetchMatches(); // Carga la API solo DESPUÉS de mostrar la App
+            }, 600);
+        }
+
+        async function fetchMatches() {
+            const container = document.getElementById('matches-container');
+            const leagues = [39, 140, 78, 135]; // Premier, LaLiga, Bundesliga, Serie A
+
+            try {
+                container.innerHTML = "";
+                for (let leagueId of leagues) {
+                    const response = await fetch(
