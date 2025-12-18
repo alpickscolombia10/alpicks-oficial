@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALPICKS | TERMINAL</title>
     
+    <link rel="icon" type="image/jpg" href="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -13,122 +14,137 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
 
-        /* SPLASH SCREEN (BLINDADO) */
+        /* SPLASH SCREEN - PRIORIDAD MÁXIMA */
         #splash {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 99999;
+            background: #000; z-index: 999999;
             display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.6s ease-out;
         }
         #splash img { 
             width: 100%; height: 100%; 
-            object-fit: cover; /* Celular: Pantalla completa */
+            object-fit: cover; /* Celular completo */
         }
         @media (min-width: 768px) { #splash img { object-fit: contain; } }
 
-        /* APP CONTAINER */
-        #main-app { visibility: hidden; opacity: 0; height: 100vh; display: flex; flex-direction: column; transition: opacity 0.5s ease; }
-        
-        header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; }
-        .logo-text { font-family: 'Orbitron'; color: #fff; font-size: 1.2rem; }
+        /* APP LAYOUT - OCULTO POR DEFECTO */
+        #main-app { display: none; height: 100vh; flex-direction: column; opacity: 0; transition: opacity 0.5s ease; }
 
-        .content { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; }
+        /* TICKER */
+        .market-ticker { background: #000; color: var(--green); padding: 6px 0; font-size: 0.6rem; font-weight: 900; overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--blue); }
+        .ticker-wrapper { display: inline-block; animation: ticker 25s linear infinite; }
+        .ticker-item { display: inline-block; margin-right: 35px; }
+
+        header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; }
+        .logo-text { font-family: 'Orbitron'; color: #fff; font-size: 1.1rem; letter-spacing: 2px; }
+
+        .content { flex: 1; overflow-y: auto; padding: 12px; padding-bottom: 100px; background: radial-gradient(circle at top, #1a2c3d 0%, #0b161f 100%); }
 
         /* MATCH CARD */
-        .match-card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.65rem; font-weight: 800; color: #fff; }
-        
-        .teams { display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center; text-align: center; margin-bottom: 15px; }
-        .team-box img { width: 40px; height: 40px; object-fit: contain; margin-bottom: 5px; }
-        .team-name { color: #fff; font-weight: 700; font-size: 0.85rem; }
+        .match-card { background: linear-gradient(145deg, #1e2f3d, #162634); border-radius: 12px; padding: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .teams-grid { display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center; text-align: center; margin: 15px 0; }
+        .team img { width: 40px; height: 40px; object-fit: contain; margin-bottom: 5px; }
+        .team-name { color: #fff; font-weight: 800; font-size: 0.8rem; }
+        .vs-box { font-weight: 900; font-size: 0.65rem; color: var(--green); background: #0a2e1a; padding: 4px; border-radius: 4px; }
 
-        .pick-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .btn-tag { background: rgba(0,231,1,0.1); color: var(--green); border: 1px solid var(--green); padding: 10px; border-radius: 6px; font-size: 0.55rem; font-weight: 800; text-align: center; display: flex; align-items: center; justify-content: center; gap: 3px; }
-        .btn-buy { background: var(--orange); color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 0.6rem; font-weight: 900; animation: heartbeat 1.5s infinite; cursor: pointer; text-decoration: none; text-align: center; }
-        
-        .guaranty { font-size: 0.5rem; color: #888; text-align: center; margin-bottom: 12px; }
+        .btn-buy { width: 100%; background: var(--orange); color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 900; font-size: 0.7rem; cursor: pointer; animation: pulse 2s infinite; text-decoration: none; display: block; text-align: center; margin-bottom: 8px; }
+        .guaranty { font-size: 0.5rem; text-align: center; color: #b1bad3; margin-bottom: 12px; }
 
-        .odds-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
-        .odd { background: var(--bg); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid var(--blue); color: #fff; font-weight: 900; font-size: 0.8rem; text-decoration: none; }
+        .odds-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+        .odd { background: var(--bg); border: 1px solid var(--blue); padding: 8px; border-radius: 6px; text-align: center; color: #fff; font-weight: 900; font-size: 0.8rem; text-decoration: none; }
 
-        /* VIP MODAL */
-        #vip-modal { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
-        .vip-item { display: flex; align-items: center; gap: 10px; background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.7rem; color: #fff; }
-        .btn-bold { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; margin-top: 10px; color: #fff; text-decoration: none; text-align: center; display: block; }
+        nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--blue); z-index: 1000; }
+        .nav-item { color: #556c7d; font-size: 0.6rem; font-weight: 900; text-align: center; }
 
-        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 18px; border-top: 1px solid #000; }
-        .nav-item { color: #556c7d; font-size: 0.6rem; font-weight: 800; text-align: center; }
-        .nav-item.active { color: var(--green); }
-        .nav-item.vip-n { color: var(--orange); }
+        #vip-modal { position: fixed; inset: 0; background: var(--bg); z-index: 2000000; display: none; flex-direction: column; padding: 25px; }
 
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,77,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,77,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,77,0,0); } }
     </style>
 </head>
 <body>
 
     <div id="splash">
-        <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg" alt="Logo">
+        <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg" id="splash-img">
     </div>
 
     <div id="main-app">
+        <div class="market-ticker">
+            <div class="ticker-wrapper">
+                <div class="ticker-item">PREMIER LEAGUE: LIVERPOOL ODDS <span>▼ 1.65</span></div>
+                <div class="ticker-item">STAKE REDUCIDO EN LALIGA <span>⚠</span></div>
+                <div class="ticker-item">MBAPPÉ TITULAR CONFIRMADO <span>✓</span></div>
+                <div class="ticker-item">MAX VALUE DETECTED: @2.10 <span>🔥</span></div>
+            </div>
+        </div>
+
         <header>
             <div class="logo-text">ALPICKS</div>
-            <div style="font-size: 0.6rem; color: var(--green); font-weight: 900;"><i class="fas fa-circle"></i> API LIVE</div>
+            <div style="color: var(--green); font-size: 0.6rem; font-weight: 900;"><i class="fas fa-bolt"></i> IA LIVE</div>
         </header>
 
-        <div class="content" id="matches-container">
-            <p style="text-align:center; padding:20px;">Sincronizando partidos de hoy...</p>
+        <div class="content" id="matches-load">
+            <p style="text-align:center; margin-top:30px;">Cargando terminal de apuestas...</p>
         </div>
 
         <nav>
-            <div class="nav-item active"><i class="fas fa-futbol" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>PARTIDOS</div>
-            <div class="nav-item"><i class="fas fa-play" style="display:block; font-size:1.2rem; margin-bottom:3px;"></i>DIRECTO</div>
-            <div class="nav-item" onclick="openVIP()"><i class="fas fa-crown" style="display:block; font-size:1.2rem; margin-bottom:3px; color:var(--orange)"></i>VIP</div>
+            <div class="nav-item"><i class="fas fa-chart-line" style="display:block; font-size:1.1rem; margin-bottom:4px;"></i>MARKET</div>
+            <div class="nav-item" onclick="openVIP()"><i class="fas fa-crown" style="display:block; font-size:1.1rem; margin-bottom:4px; color:var(--orange)"></i>VIP</div>
         </nav>
     </div>
 
-    <div id="vip-modal">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h2 style="font-family:'Orbitron'; color:#fff; font-size:0.8rem;">APUESTA INTELIGENTE CON ALPICKS!</h2>
-            <i class="fas fa-times" onclick="closeVIP()" style="color:#fff; font-size:1.5rem;"></i>
-        </div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> ANALISIS MACHINE LEARNING <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CANAL TELEGRAM VIP <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 1 A 3 PICKS DE VALOR POR DÍA <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> GESTION DEL RIESGO <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> CUOTAS 1.70 Y MÁS <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-        <div class="vip-item"><i class="fas fa-check-circle" style="color:var(--green)"></i> 60% PROBABILIDAD DE ACIERTO <i class="fas fa-check-circle" style="color:var(--green)"></i></div>
-
-        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-bold" style="background:var(--blue);">SEMANAL - 25.000/por semana</a>
-        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-bold" style="background:var(--green); color:#000;">SUSCRIPCION MENSUAL - $55.000</a>
-        
-        <p style="font-size:0.5rem; text-align:center; margin-top:15px; color:#888;">Duracion: Diario(1 pick), Semanal(7 tips), Mensual(30 tips).</p>
-    </div>
-
     <script>
-        const API_KEY = "328d7a3b494469c2386dac3e4aa15a18";
-
-        // 1. RELOJ BLINDADO: A los 3 segundos se quita el Splash sí o sí
-        setTimeout(showApp, 3000);
-
-        function showApp() {
+        // 1. ESTO ES LO QUE ARREGLA TODO:
+        // Forzamos la salida del splash a los 3 segundos, cargue la imagen o no.
+        function forceUnlock() {
             const splash = document.getElementById('splash');
             const app = document.getElementById('main-app');
             
             splash.style.opacity = '0';
             setTimeout(() => {
                 splash.style.display = 'none';
-                app.style.visibility = 'visible';
-                app.style.opacity = '1';
-                fetchMatches(); // Carga la API solo DESPUÉS de mostrar la App
+                app.style.display = 'flex';
+                setTimeout(() => { app.style.opacity = '1'; }, 50);
+                fetchMatches(); // Carga la API solo cuando ya estamos dentro
             }, 600);
         }
 
+        // Ejecutar el cronómetro de inmediato
+        setTimeout(forceUnlock, 3000);
+
         async function fetchMatches() {
-            const container = document.getElementById('matches-container');
-            const leagues = [39, 140, 78, 135]; // Premier, LaLiga, Bundesliga, Serie A
+            const API_KEY = "328d7a3b494469c2386dac3e4aa15a18";
+            const container = document.getElementById('matches-load');
+            const leagues = [39, 140, 78];
 
             try {
                 container.innerHTML = "";
-                for (let leagueId of leagues) {
-                    const response = await fetch(
+                for (let id of leagues) {
+                    const res = await fetch(`https://v3.football.api-sports.io/fixtures?league=${id}&next=2`, {
+                        headers: { "x-rapidapi-key": API_KEY, "x-rapidapi-host": "v3.football.api-sports.io" }
+                    });
+                    const data = await res.json();
+                    data.response.forEach(m => {
+                        container.innerHTML += `
+                            <div class="match-card">
+                                <div class="teams-grid">
+                                    <div class="team"><img src="${m.teams.home.logo}"><div class="team-name">${m.teams.home.name}</div></div>
+                                    <div class="vs-box">VS</div>
+                                    <div class="team"><img src="${m.teams.away.logo}"><div class="team-name">${m.teams.away.name}</div></div>
+                                </div>
+                                <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-buy">DESBLOQUEAR PICK - $10.000</a>
+                                <div class="guaranty">GARANTÍA: SI FALLA, EL SIGUIENTE ES GRATIS.</div>
+                                <div class="odds-row">
+                                    <a href="https://stake.com.co" class="odd">1.80</a>
+                                    <a href="https://stake.com.co" class="odd">3.30</a>
+                                    <a href="https://stake.com.co" class="odd">4.50</a>
+                                </div>
+                            </div>`;
+                    });
+                }
+            } catch (e) { console.log("Error API"); }
+        }
+
+        function openVIP() { /* Lógica VIP aquí */ alert("Acceso VIP requerido"); }
+    </script>
+</body>
+</html>
