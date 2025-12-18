@@ -3,275 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPICKS OS | QUANTUM PREDICTOR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>ALPICKS | PROFESSIONAL ML PREDICTOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --bg: #050508;
-            --card: #12131a;
-            --neon: #00ff88;
-            --gold: #ffcc00;
-            --glass: rgba(255, 255, 255, 0.03);
+            --stake-dark: #0f212e; /* El color exacto de Stake */
+            --stake-card: #1a2c38;
+            --stake-blue: #2f4553;
+            --stake-green: #00e701; /* El verde neón característico */
+            --text-main: #b1bad3;
+            --white: #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { background: var(--stake-dark); color: var(--text-main); font-family: 'Inter', sans-serif; }
 
-        /* NOTIFICACIONES DE DOPAMINA (FAKE LIVE) */
-        #notification-toast {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 350px; background: rgba(0, 255, 136, 0.95);
-            color: black; padding: 12px; border-radius: 15px; font-size: 0.75rem;
-            font-weight: 800; z-index: 5000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,255,136,0.4);
-        }
-
-        /* HEADER */
+        /* HEADER PROFESIONAL */
         header {
-            padding: 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass); display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000;
+            background: var(--stake-card); padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--stake-dark); position: sticky; top: 0; z-index: 1000;
         }
-        .logo { font-family: 'Orbitron'; font-size: 1.3rem; color: var(--gold); text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); }
+        .brand { font-family: 'Orbitron'; font-size: 1rem; color: var(--white); font-weight: 800; letter-spacing: 1px; }
+        .stake-partner { display: flex; align-items: center; gap: 8px; font-size: 0.6rem; font-weight: 700; color: var(--text-main); }
+        .stake-logo { background: var(--white); color: var(--stake-dark); padding: 2px 6px; border-radius: 4px; font-weight: 900; }
 
-        .app-shell { padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
-
-        /* RADAR SCANNER */
-        .scanner-box {
-            background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid var(--glass); position: relative; overflow: hidden;
-        }
-        .scanner-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--neon); box-shadow: 0 0 15px var(--neon);
-            animation: scan 3s linear infinite; opacity: 0.5;
-        }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        /* MATCH CARD (FLASHCORE STYLE) */
-        .match {
-            background: #1a1b23; border-radius: 15px; padding: 18px; margin-bottom: 12px;
-            display: grid; grid-template-columns: 1fr 80px; align-items: center;
-            border: 1px solid transparent; transition: 0.3s;
-        }
-        .match.active-pick { border-color: var(--neon); background: linear-gradient(145deg, #1a1b23, #0a0a0f); }
-        
-        .teams { display: flex; flex-direction: column; gap: 8px; }
-        .team-row { display: flex; align-items: center; gap: 12px; }
-        .team-row img { width: 22px; height: 22px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.1)); }
-        .team-row span { font-size: 0.9rem; font-weight: 700; letter-spacing: -0.5px; }
-
-        .odds-btn {
-            background: var(--gold); color: black; border: none; padding: 10px;
-            border-radius: 8px; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: 900;
-            cursor: pointer; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2);
+        /* TRIAL BANNER */
+        .trial-status {
+            background: var(--stake-blue); color: var(--white); text-align: center;
+            padding: 8px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* TICKET FÍSICO DIGITAL */
-        #ticket-result {
-            display: none; margin-top: 20px; background: white; color: black;
-            border-radius: 4px; padding: 20px; position: relative;
-            animation: popIn 0.5s cubic-bezier(0.26, 1.36, 0.4, 1.29);
-        }
-        #ticket-result::before {
-            content: ''; position: absolute; top: -10px; left: 0; width: 100%; height: 20px;
-            background-image: radial-gradient(circle, transparent 70%, white 70%);
-            background-size: 20px 20px; background-position: 0 -10px;
-        }
-        .ticket-header { border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; text-align: center; }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 90px; }
 
-        /* FOOTER DOCK */
+        /* MATCH ANALYTICS CARD */
+        .card {
+            background: var(--stake-card); border-radius: 8px; padding: 20px;
+            margin-bottom: 12px; transition: 0.3s; border: 1px solid transparent;
+        }
+        .card:hover { border-color: var(--stake-blue); }
+
+        .league-info { font-size: 0.6rem; font-weight: 700; color: var(--text-main); margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
+
+        .match-row { display: grid; grid-template-columns: 1fr 30px 1fr; align-items: center; margin: 15px 0; }
+        .team { text-align: center; }
+        .team-icon { 
+            width: 45px; height: 45px; background: var(--stake-dark); 
+            border-radius: 50%; margin: 0 auto 10px; display: flex; 
+            align-items: center; justify-content: center; color: var(--white);
+            font-size: 1.2rem; border: 2px solid var(--stake-blue);
+        }
+        .team-name { font-size: 0.8rem; font-weight: 700; color: var(--white); }
+
+        /* DATA ENGINE VISUAL */
+        .engine-box { background: var(--stake-dark); border-radius: 4px; padding: 15px; margin-top: 20px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.6rem; margin-bottom: 8px; font-weight: 700; }
+        .progress-bar { width: 100%; height: 6px; background: var(--stake-blue); border-radius: 3px; overflow: hidden; }
+        .progress-fill { width: 94.8%; height: 100%; background: var(--stake-green); }
+
+        /* BOTÓN STAKE STYLE */
+        .btn-stake {
+            width: 100%; padding: 16px; border-radius: 4px; border: none;
+            background: var(--stake-green); color: #000; font-weight: 800;
+            font-size: 0.85rem; cursor: pointer; margin-top: 15px; transition: 0.2s;
+        }
+        .btn-stake:hover { filter: brightness(1.1); }
+        .btn-stake:active { transform: scale(0.98); }
+
+        /* NAV DOCK */
         .dock {
-            position: fixed; bottom: 0; width: 100%; background: #000;
-            padding: 20px; display: flex; justify-content: space-around;
-            border-top: 1px solid var(--glass); z-index: 2000;
+            position: fixed; bottom: 0; width: 100%; background: var(--stake-card);
+            display: flex; justify-content: space-around; padding: 15px;
+            border-top: 2px solid var(--stake-dark);
         }
-        .dock i { font-size: 1.3rem; color: #444; }
-        .dock i.active { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+        .dock-item { color: var(--text-main); font-size: 1.1rem; cursor: pointer; }
+        .dock-item.active { color: var(--white); }
 
-        /* MODAL */
+        /* MODAL PROFESIONAL */
         .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px;
+            position: fixed; inset: 0; background: rgba(15, 33, 46, 0.98);
+            display: flex; align-items: center; justify-content: center; z-index: 5000; padding: 25px;
         }
         .modal-content {
-            background: var(--card); padding: 30px; border-radius: 25px; text-align: center;
-            border: 1px solid var(--neon); width: 100%; max-width: 400px;
+            background: var(--stake-card); border-radius: 8px; padding: 30px;
+            text-align: center; max-width: 350px; width: 100%;
         }
     </style>
 </head>
 <body>
 
-<div id="notification-toast">
-    <i class="fas fa-check-circle"></i>
-    <span id="toast-msg">Juan acaba de ganar $450.000 con el Pick VIP</span>
+<div id="trial-banner" class="trial-status" style="display:none;">
+    LICENCIA DE EVALUACIÓN: <span id="days">15</span> DÍAS RESTANTES
 </div>
 
 <header>
-    <div class="logo">ALPICKS OS</div>
-    <div style="font-size: 0.7rem; color: var(--neon); font-weight: 900;">
-        <i class="fas fa-microchip"></i> IA ACTIVE
+    <div class="brand">ALPICKS OS</div>
+    <div class="stake-partner">
+        POWERED BY <span class="stake-logo">Stake</span>
     </div>
 </header>
 
-<div class="app-shell">
+<div class="container">
     
-    <div class="scanner-box">
-        <div class="scanner-line"></div>
-        <div style="display:flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h4 style="font-family: 'Orbitron'; font-size: 0.8rem; color: var(--neon);">PROCESANDO JORNADA</h4>
-                <p style="font-size: 0.6rem; opacity: 0.5;">Analizando 1,420 variables de mercado...</p>
-            </div>
-            <i class="fas fa-satellite-dish" style="color: var(--neon); font-size: 1.5rem;"></i>
+    <div class="card">
+        <div class="league-info">
+            <i class="fas fa-trophy"></i> COPA ITALIA - MACHINE LEARNING INFERENCE
         </div>
-    </div>
+        
+        <div class="match-row">
+            <div class="team">
+                <div class="team-icon"><i class="fas fa-shield-halved" style="color:#0055ff"></i></div>
+                <div class="team-name">NAPOLI</div>
+            </div>
+            <div style="text-align:center; font-weight:900; opacity:0.3; font-size:0.7rem">VS</div>
+            <div class="team">
+                <div class="team-icon"><i class="fas fa-shield-halved" style="color:#ff0000"></i></div>
+                <div class="team-name">MILAN</div>
+            </div>
+        </div>
 
-    <div class="match active-pick">
-        <div class="teams">
-            <div class="team-row">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png">
-                <span>Napoli</span>
+        <div class="engine-box">
+            <div class="progress-label">
+                <span>CONFIANZA DEL MODELO (ML)</span>
+                <span style="color:var(--stake-green)">94.8%</span>
             </div>
-            <div class="team-row">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png">
-                <span>Milan</span>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
             </div>
         </div>
-        <div class="odds-btn" onclick="showPay()">UNLOCK</div>
-    </div>
 
-    <div id="ticket-result">
-        <div class="ticket-header">
-            <h3 style="font-family: 'Orbitron'; font-size: 0.9rem;">CONFIRMED PICK</h3>
-        </div>
-        <p style="font-size: 0.7rem; color: #666;">EVENTO: COPA ITALIA</p>
-        <h2 style="margin: 10px 0; font-weight: 900; color: #000;">NAPOLI GANA O EMPATA & +1.5</h2>
-        <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #eee; pt: 10px;">
-            <span>CUOTA: 1.88</span>
-            <span>EFECTIVIDAD: 94%</span>
-        </div>
+        <button class="btn-stake" onclick="location.href='https://checkout.bold.co/payment/LNK_IVT8NCM2JP'">
+            VER INFERENCIA PROFESIONAL
+        </button>
     </div>
 
 </div>
 
-<div id="payModal" class="modal">
+<div id="modal" class="modal">
     <div class="modal-content">
-        <i class="fas fa-lock-open" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 20px;"></i>
-        <h2 style="font-family: 'Orbitron'; margin-bottom: 10px;">ACCESO VIP</h2>
-        <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 25px;">Obtén el análisis completo y el ticket de apuesta para este encuentro.</p>
-        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="odds-btn" style="display: block; text-decoration: none; padding: 18px; font-size: 1rem;">COMPRAR AHORA ($12k)</a>
-        <p onclick="showVipInput()" style="margin-top: 20px; font-size: 0.7rem; text-decoration: underline; cursor: pointer;">Ya tengo un código</p>
+        <h2 style="color:var(--white); font-family:'Orbitron'; font-size:1.1rem; margin-bottom:15px;">TERMINAL DE MACHINE LEARNING</h2>
+        <p style="font-size:0.8rem; margin-bottom:25px; line-height:1.6;">
+            Se ha detectado una nueva conexión. Se le ha otorgado una licencia de evaluación de 15 días para el motor predictivo de Alpicks.
+        </p>
+        <button class="btn-stake" onclick="start()">ACTIVAR EVALUACIÓN</button>
     </div>
 </div>
 
-<div class="dock">
-    <i class="fas fa-futbol active"></i>
-    <i class="fas fa-star"></i>
-    <i class="fas fa-chart-pie"></i>
-    <i class="fas fa-user-astronaut"></i>
-</div>
+<nav class="dock">
+    <i class="fas fa-stream dock-item active"></i>
+    <i class="fas fa-chart-bar dock-item"></i>
+    <i class="fas fa-user-shield dock-item"></i>
+</nav>
 
 <script>
-    // Sistema de Notificaciones de Dopamina
-    const names = ["Andrés", "Camilo", "Danna", "Mateo", "PicksCol"];
-    const amounts = ["$120.000", "$450.000", "$80.000", "$1.200.000"];
-    
-    function showToast() {
-        const toast = document.getElementById('notification-toast');
-        const name = names[Math.floor(Math.random()*names.length)];
-        const amount = amounts[Math.floor(Math.random()*amounts.length)];
-        document.getElementById('toast-msg').innerText = `${name} acaba de ganar ${amount} con ALPICKS`;
-        toast.style.top = "20px";
-        setTimeout(() => { toast.style.top = "-100px"; }, 4000);
+    function start() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('trial-banner').style.display = 'block';
+        localStorage.setItem('alpicks_v9_trial', Date.now());
     }
-    setInterval(showToast, 8000);
 
-    function showPay() { document.getElementById('payModal').style.display = 'flex'; }
-
-    function showVipInput() {
-        const code = prompt("INGRESA TU CÓDIGO VIP DE 6 DÍGITOS:");
-        if(code && code.toUpperCase() === "VIP777") {
-            document.getElementById('payModal').style.display = 'none';
-            confetti({ particleCount: 250, spread: 80, origin: { y: 0.7 } });
-            document.getElementById('ticket-result').style.display = 'block';
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
+    if(localStorage.getItem('alpicks_v9_trial')) {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('trial-banner').style.display = 'block';
     }
 </script>
 
 </body>
 </html>
-
-<div id="trial-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: #111218; border: 2px solid #00ff88; border-radius: 25px; padding: 30px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 0 40px rgba(0,255,136,0.2);">
-        
-        <div style="width: 70px; height: 70px; background: rgba(0,255,136,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-            <i class="fas fa-gift" style="color: #00ff88; font-size: 2rem;"></i>
-        </div>
-        
-        <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 10px;">LICENCIA DE EVALUACIÓN</h2>
-        <p style="font-size: 0.8rem; color: #888; line-height: 1.5; margin-bottom: 25px;">
-            Has sido seleccionado para una prueba de <span style="color:#fff; font-weight:bold;">15 DÍAS</span> del motor de Machine Learning ALPICKS.
-        </p>
-
-        <div style="text-align: left; margin-bottom: 25px;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.75rem;">
-                <i class="fas fa-check" style="color:#00ff88;"></i> Acceso a Modelos Predictivos
-            </div>
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.75rem;">
-                <i class="fas fa-check" style="color:#00ff88;"></i> Inferencia en tiempo real
-            </div>
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.75rem;">
-                <i class="fas fa-check" style="color:#00ff88;"></i> Notificaciones de Valor (v8.4)
-            </div>
-        </div>
-
-        <button onclick="activateTrial()" style="width: 100%; padding: 18px; border-radius: 12px; border: none; background: #00ff88; color: #000; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; box-shadow: 0 10px 20px rgba(0,255,136,0.3);">
-            ACTIVAR 15 DÍAS GRATIS
-        </button>
-        
-        <p style="margin-top: 15px; font-size: 0.6rem; color: #444;">No se requiere tarjeta de crédito para la evaluación.</p>
-    </div>
-</div>
-
-<div id="trial-counter" style="display: none; background: #00ff88; color: #000; padding: 5px; text-align: center; font-size: 0.65rem; font-weight: 900; font-family: 'Orbitron';">
-    DÍAS RESTANTES DE LICENCIA: <span id="days-count">15</span>D 23H 59M
-</div>
-
-<script>
-    function activateTrial() {
-        // Efecto de dopamina al activar
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#00ff88', '#ffffff']
-        });
-
-        // Ocultar modal y mostrar contador
-        document.getElementById('trial-modal').style.display = 'none';
-        document.getElementById('trial-counter').style.display = 'block';
-        
-        // Aquí podrías guardar la fecha en localStorage para que el usuario no pueda reiniciar la prueba
-        localStorage.setItem('alpicks_trial_start', new Date().getTime());
-        
-        alert("¡SISTEMA ACTIVADO! Tienes 15 días de acceso al Machine Learning Engine.");
-    }
-
-    // Lógica para persistir la prueba al recargar la página
-    window.onload = function() {
-        if(localStorage.getItem('alpicks_trial_start')) {
-            document.getElementById('trial-modal').style.display = 'none';
-            document.getElementById('trial-counter').style.display = 'block';
-            
-            // Cálculo simple de días (ejemplo)
-            let start = localStorage.getItem('alpicks_trial_start');
-            let now = new Date().getTime();
-            let diff = 15 - Math.floor((now - start) / (1000 * 60 * 60 * 24));
-            document.getElementById('days-count').innerText = diff > 0 ? diff : 0;
-        }
-    }
-</script>
