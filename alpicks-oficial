@@ -3,175 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPICKS | EMPIRE DASHBOARD</title>
+    <title>ALPICKS | EMPIRE PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@300;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --neon-green: #00ff88;
             --gold: #ffcc00;
             --cyber-blue: #00d9ff;
             --dark-bg: #020205;
-            --card-bg: rgba(15, 15, 25, 0.95);
+            --card-bg: rgba(15, 15, 25, 0.98);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--dark-bg); color: white; font-family: 'Montserrat', sans-serif; }
+        body { background: var(--dark-bg); color: white; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        /* HEADER PREMIUM */
+        /* HEADER */
         header {
-            background: linear-gradient(to bottom, #101018, transparent);
-            padding: 25px 15px; text-align: center; border-bottom: 1px solid rgba(0, 255, 136, 0.2);
-            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
+            background: #0a0a0f;
+            padding: 15px; text-align: center; border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .logo-text { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; color: var(--gold); letter-spacing: 4px; }
-        .live-indicator { font-size: 0.6rem; color: var(--neon-green); letter-spacing: 2px; font-weight: 700; }
+        .logo-img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); }
+        .logo-text { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
 
         .container { padding: 15px; max-width: 480px; margin: 0 auto; padding-bottom: 100px; }
 
-        /* TARJETA DE PARTIDO ESTILO APP */
+        /* CARDS */
         .match-card {
             background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden;
         }
         
-        .league-tag { font-family: 'Orbitron'; font-size: 0.6rem; color: #666; display: flex; justify-content: space-between; margin-bottom: 15px; }
-        
-        .teams-row { display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; }
-        .team { text-align: center; width: 35%; }
-        .team img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; }
-        .team span { display: block; font-size: 0.75rem; font-weight: 900; }
-        
-        .vs-circle { 
-            width: 40px; height: 40px; border: 1px solid #333; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-size: 0.8rem;
-            background: rgba(255,255,255,0.05);
-        }
+        .live-tag { font-family: 'Orbitron'; font-size: 0.6rem; color: var(--neon-green); margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+        .dot { height: 6px; width: 6px; background: red; border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
-        /* BARRA DE PROBABILIDAD IA */
-        .ai-analysis { margin-bottom: 15px; }
-        .bar-label { display: flex; justify-content: space-between; font-size: 0.6rem; font-family: 'Orbitron'; margin-bottom: 5px; color: var(--cyber-blue); }
-        .bar-bg { width: 100%; height: 6px; background: #111; border-radius: 3px; overflow: hidden; display: flex; }
+        .teams { display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; }
+        .team { text-align: center; width: 35%; }
+        .team img { width: 55px; height: 55px; object-fit: contain; margin-bottom: 8px; }
+        .team p { font-size: 0.7rem; font-weight: 900; font-family: 'Orbitron'; }
+        
+        .vs { font-family: 'Orbitron'; font-size: 1.2rem; color: #444; }
+
+        .ai-bar-container { margin: 15px 0; }
+        .bar-info { display: flex; justify-content: space-between; font-size: 0.6rem; font-family: 'Orbitron'; margin-bottom: 5px; color: var(--cyber-blue); }
+        .bar-track { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; }
         .bar-fill { height: 100%; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
 
-        /* BOTÓN DE ACCESO */
-        .btn-access {
-            width: 100%; padding: 15px; border-radius: 12px; border: none;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem; cursor: pointer;
+        /* ACCIÓN */
+        .btn-main {
+            width: 100%; padding: 18px; border-radius: 12px; border: none;
+            font-family: 'Orbitron'; font-weight: 900; font-size: 0.85rem; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: 0.3s; text-decoration: none;
+            transition: 0.3s; text-decoration: none; margin-bottom: 10px;
+            background: var(--gold); color: black;
         }
-        .btn-gold { background: var(--gold); color: black; box-shadow: 0 5px 15px rgba(255, 204, 0, 0.3); }
-        .btn-locked { background: #1a1a25; color: #555; border: 1px solid #333; cursor: not-allowed; }
 
-        /* NAV BAR INFERIOR */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: #08080c; 
-            padding: 15px 0; display: flex; justify-content: space-around;
-            border-top: 1px solid #1a1a25; z-index: 1000;
+        .input-vip {
+            width: 100%; padding: 15px; background: #000; border: 1px solid var(--cyber-blue);
+            color: white; border-radius: 12px; text-align: center; font-family: 'Orbitron';
+            margin-top: 10px; display: none; outline: none;
         }
-        .nav-item { color: #444; font-size: 1.3rem; transition: 0.3s; }
-        .nav-item.active { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
 
-        .fomo-pills { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .pill { background: rgba(0, 217, 255, 0.1); border: 1px solid var(--cyber-blue); padding: 5px 12px; border-radius: 20px; font-size: 0.6rem; white-space: nowrap; color: var(--cyber-blue); }
+        .result-box {
+            display: none; margin-top: 15px; padding: 15px; border: 1px solid var(--neon-green);
+            background: rgba(0, 255, 136, 0.1); border-radius: 12px; text-align: center;
+            font-family: 'Orbitron'; color: var(--neon-green); animation: slideIn 0.5s ease;
+        }
 
+        @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* NAV */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #0a0a0f; padding: 20px; display: flex; justify-content: space-around; border-top: 1px solid #1a1a25; }
+        .nav i { color: #444; font-size: 1.2rem; }
+        .nav i.active { color: var(--neon-green); }
     </style>
 </head>
 <body>
 
 <header>
+    <img src="https://i.postimg.cc/sgvLNxcD/1d0a6010-757a-4149-922d-9d969ffbad7e.jpg" class="logo-img">
     <div class="logo-text">ALPICKS</div>
-    <div class="live-indicator"><i class="fas fa-circle"></i> SISTEMA ALGORÍTMICO ACTIVO</div>
 </header>
 
 <div class="container">
     
-    <div class="fomo-pills">
-        <div class="pill"><i class="fas fa-fire"></i> NAPOLI 94% CONF.</div>
-        <div class="pill"><i class="fas fa-bolt"></i> +$2.5M PAGADOS</div>
-        <div class="pill"><i class="fas fa-users"></i> 1.2K ACTIVOS</div>
-    </div>
-
-    <div class="match-card" style="border: 1px solid var(--neon-green);">
-        <div class="league-tag">
-            <span>COPA ITALIA - SEMIFINAL</span>
-            <span style="color: var(--neon-green);">MAÑANA 14:00</span>
-        </div>
-        <div class="teams-row">
+    <div class="match-card" style="border: 1px solid rgba(0, 255, 136, 0.3);">
+        <div class="live-tag"><div class="dot"></div> ALGORITMO ANALIZANDO • COPA ITALIA</div>
+        <div class="teams">
             <div class="team">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/SSC_Napoli_2021.svg/1200px-SSC_Napoli_2021.svg.png">
-                <span>NAPOLI</span>
+                <p>NAPOLI</p>
             </div>
-            <div class="vs-circle">VS</div>
+            <div class="vs">VS</div>
             <div class="team">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_AC_Milan.svg/1200px-Logo_AC_Milan.svg.png">
-                <span>MILAN</span>
+                <p>MILAN</p>
             </div>
         </div>
-        <div class="ai-analysis">
-            <div class="bar-label"><span>PROBABILIDAD DE ÉXITO</span> <span>94%</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 94%;"></div></div>
+
+        <div class="ai-bar-container">
+            <div class="bar-info"><span>PROBABILIDAD IA</span> <span>94%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width: 94%;"></div></div>
         </div>
-        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-access btn-gold">
-            <i class="fas fa-unlock"></i> DESBLOQUEAR PICK VIP ($12.000)
+
+        <a href="https://checkout.bold.co/payment/LNK_IVT8NCM2JP" class="btn-main" id="payBtn">
+            <i class="fas fa-bolt"></i> COMPRAR PICK VIP ($12.000)
         </a>
-    </div>
-
-    <div class="match-card">
-        <div class="league-tag">
-            <span>NBA - REGULAR SEASON</span>
-            <span>HOY 20:00</span>
-        </div>
-        <div class="teams-row">
-            <div class="team">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Boston_Celtics.svg/1200px-Boston_Celtics.svg.png">
-                <span>CELTICS</span>
-            </div>
-            <div class="vs-circle">VS</div>
-            <div class="team">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Golden_State_Warriors_logo.svg/1200px-Golden_State_Warriors_logo.svg.png">
-                <span>WARRIORS</span>
-            </div>
-        </div>
-        <div class="ai-analysis">
-            <div class="bar-label"><span>PROBABILIDAD DE ÉXITO</span> <span>88%</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 88%; background: var(--cyber-blue); box-shadow: 0 0 10px var(--cyber-blue);"></div></div>
-        </div>
-        <button class="btn-access btn-locked">
-            <i class="fas fa-lock"></i> AGOTADO / CERRADO
+        
+        <button class="btn-main" style="background:transparent; border:1px solid #333; color:white;" onclick="showInput()">
+            YA TENGO MI CÓDIGO
         </button>
-    </div>
 
-    <div class="match-card">
-        <div class="league-tag">
-            <span>LALIGA - ESPAÑA</span>
-            <span>DOMINGO 15:00</span>
+        <input type="text" id="vipCode" class="input-vip" placeholder="PEGA TU CÓDIGO AQUÍ" oninput="checkCode()">
+        
+        <div id="result" class="result-box">
+            <small>PICK DESBLOQUEADO:</small><br>
+            <strong>NAPOLI GANA O EMPATA & +1.5 GOLES</strong>
         </div>
-        <div class="teams-row">
-            <div class="team">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png">
-                <span>R. MADRID</span>
-            </div>
-            <div class="vs-circle">VS</div>
-            <div class="team">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona.svg/1200px-FC_Barcelona_S.C._logo.svg.png">
-                <span>BARCELONA</span>
-            </div>
-        </div>
-        <button class="btn-access btn-locked">
-            <i class="fas fa-hourglass-half"></i> ANALIZANDO DATOS...
-        </button>
     </div>
 
 </div>
 
-<div class="bottom-nav">
-    <div class="nav-item active"><i class="fas fa-th-large"></i></div>
-    <div class="nav-item"><i class="fas fa-chart-pie"></i></div>
-    <div class="nav-item"><i class="fas fa-ticket-alt"></i></div>
-    <div class="nav-item"><i class="fas fa-user-shield"></i></div>
+<div class="nav">
+    <i class="fas fa-home active"></i>
+    <i class="fas fa-chart-bar"></i>
+    <i class="fas fa-history"></i>
+    <i class="fas fa-user-circle"></i>
 </div>
+
+<script>
+    function showInput() {
+        document.getElementById('vipCode').style.display = 'block';
+        document.getElementById('vipCode').focus();
+    }
+
+    function checkCode() {
+        const code = document.getElementById('vipCode').value.toUpperCase().trim();
+        if(code === "VIP777") {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.8 } });
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('vipCode').style.display = 'none';
+            document.getElementById('payBtn').style.display = 'none';
+        }
+    }
+</script>
 
 </body>
 </html>
